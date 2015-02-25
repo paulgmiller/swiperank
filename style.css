@@ -30,28 +30,10 @@
 
 }
 
-#debug {
-
-  background: silver;
-
-  height: 100px;
-
-  float:bottom;
-
-  width: 400px;
-
-  text-align: left;
-
-  font: 10px/100px Helvetica, Arial, sans-serif;
-
-}
-
 #all {
 
-width:400px;
-
+width:100%;
+text-align: center;
 margin:0 auto;
-
-background:#99c;
 
 }

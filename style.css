@@ -1,11 +1,11 @@
 
 #left {
 
-  background: silver;
+  background: white;
 
-  height: 300px;
+  height: 60%;
 
-  width: 200px;
+  width: 50%;
 
   float: left;
 
@@ -17,13 +17,12 @@
 
 #right {
 
-  background: silver;
+  background: white;
 
-  height: 300px;
+  height: 60%;
+  width: 50%;
 
   float:right;
-
-  width: 200px;
 
   text-align: center;
 

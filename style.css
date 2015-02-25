@@ -1,0 +1,58 @@
+
+#left {
+
+  background: silver;
+
+  height: 300px;
+
+  width: 200px;
+
+  float: left;
+
+  text-align: center;
+
+  font: 30px/300px Helvetica, Arial, sans-serif;
+
+}
+
+#right {
+
+  background: silver;
+
+  height: 300px;
+
+  float:right;
+
+  width: 200px;
+
+  text-align: center;
+
+  font: 30px/300px Helvetica, Arial, sans-serif;
+
+}
+
+#debug {
+
+  background: silver;
+
+  height: 100px;
+
+  float:bottom;
+
+  width: 400px;
+
+  text-align: left;
+
+  font: 10px/100px Helvetica, Arial, sans-serif;
+
+}
+
+#all {
+
+width:400px;
+
+margin:0 auto;
+
+background:#99c;
+
+}

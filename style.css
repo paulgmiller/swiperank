@@ -1,39 +1,33 @@
 
 #left {
 
-  background: white;
-
   height: 60%;
-
   width: 50%;
-
   float: left;
-
   text-align: center;
-
-   font: 50px/400px Helvetica, Arial, sans-serif;
+  font: 70px/500px Helvetica, Arial, sans-serif;
 
 }
 
 #right {
 
-  background: white;
-
   height: 60%;
   width: 50%;
-
   float:right;
+  text-align: center;
+  font: 70px/500px Helvetica, Arial, sans-serif;
+
+}
+#header {
 
   text-align: center;
-
-  font: 50px/400px Helvetica, Arial, sans-serif;
-
+  font: 30px/100px Helvetica, Arial, sans-serif;
 }
 
 #all {
-
-width:100%;
-margin:0 auto;
-font: 50px Helvetica, Arial, sans-serif;
-
+  width:100%;
+  margin:0 auto;
+  font: 50px Helvetica, Arial, sans-serif;
+  text-align: center;
 }
+

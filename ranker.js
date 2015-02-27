@@ -65,8 +65,8 @@ var mca = new Hammer(all);
 var mcl = new Hammer(left);
 var mcr = new Hammer(right);
 // listen to events...
-mca.on("swipeleft", function(ev) { ranker.better(); });
-mca.on("swiperight", function(ev) { ranker.worse(); });
+mca.on("swipeleft", function(ev) { ranker.worse(); });
+mca.on("swiperight", function(ev) { ranker.better(); });
 //mcl.on("tap press", function(ev) { ranker.better(); });
 //mcr.on("tap press", function(ev) { ranker.worse(); });
 

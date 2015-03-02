@@ -27,9 +27,15 @@
 #all {
   width:100%;
   margin:0 auto;
-  font: 50px Helvetica, Arial, sans-serif;
-  text-align: center;
+  
 }
+
+ol li { 
+  text-align: center; 
+  list-style-position:inside;
+  font: 40px Helvetica, Arial, sans-serif;
+}
+
 
 #html {
   touch-action:none;

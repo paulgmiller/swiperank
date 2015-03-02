@@ -39,14 +39,10 @@ var ranker = {
 function paint() {
   if (ranker.done())
   {
-     var listElement = document.createElement("ol");
-     $("#all").appendChild(listElement);
-	
      for( var i in ranker.ranking)
      {
-      	var listItem = document.createElement("li");
-	      listItem.innerHTML = ranker.ranking[i];
-        listElement.appendChild(listItem);
+      	var item = $("<li></li>").text(ranker.ranking[i]);
+	$("ol").append(item);
      }
      return;
   }
@@ -55,8 +51,8 @@ function paint() {
 }
 paint();
 
-$("#all").on("swipeleft", function(ev) { ranker.better(); });
-$("#all").on("swiperight", function(ev) { ranker.worse(); });
+$("#left").click(function(ev) { ranker.better(); });
+$("#right").click(function(ev) { ranker.worse(); });
 //mcl.on("tap press", function(ev) { ranker.better(); });
 //mcr.on("tap press", function(ev) { ranker.worse(); });
 

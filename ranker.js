@@ -49,6 +49,7 @@ function paint() {
   }
   $("#right").text(ranker.candidate);
   $("#left").text(ranker.consideration());
+
 }
 paint();
 
@@ -68,4 +69,9 @@ function shuffle(o){ //v1.0
     return o;
 };
 
+
+});
+
+$(document).on("pageshow", "[data-role='page']", function () {
+ $('div.ui-loader').remove();
 });

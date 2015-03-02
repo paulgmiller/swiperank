@@ -51,8 +51,11 @@ function paint() {
 }
 paint();
 
-$("#left").click(function(ev) { ranker.better(); });
-$("#right").click(function(ev) { ranker.worse(); });
+//$("#left").click(function(ev) { ranker.better(); });
+//$("#right").click(function(ev) { ranker.worse(); });
+$("#all").on("swipeleft", function(ev) { ranker.better(); });
+$("#all").on("swipright", function(ev) { ranker.worse(); });
+
 //mcl.on("tap press", function(ev) { ranker.better(); });
 //mcr.on("tap press", function(ev) { ranker.worse(); });
 

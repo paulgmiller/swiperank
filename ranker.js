@@ -1,3 +1,4 @@
+$(document).ready(function(){
 
 var sourcelist = shuffle(["bud", "coors", "miller", "rainer", "pabst", "jenny","stone"]);
 
@@ -54,7 +55,7 @@ paint();
 //$("#left").click(function(ev) { ranker.better(); });
 //$("#right").click(function(ev) { ranker.worse(); });
 $("#all").on("swipeleft", function(ev) { ranker.better(); });
-$("#all").on("swipright", function(ev) { ranker.worse(); });
+$("#all").on("swiperight", function(ev) { ranker.worse(); });
 
 //mcl.on("tap press", function(ev) { ranker.better(); });
 //mcr.on("tap press", function(ev) { ranker.worse(); });
@@ -66,3 +67,5 @@ function shuffle(o){ //v1.0
     for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
     return o;
 };
+
+});

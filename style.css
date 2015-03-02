@@ -38,5 +38,5 @@ ol li {
 
 
 html {
-  -ms-touch-action : none;
+  -ms-touch-action : pan-y;
 }

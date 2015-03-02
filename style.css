@@ -37,7 +37,6 @@ ol li {
 }
 
 
-#html {
-  touch-action:none;
+html {
+  -ms-touch-action : none;
 }
-

@@ -1,7 +1,3 @@
-var all = document.getElementById('all');
-var left = document.getElementById('left');
-var right = document.getElementById('right');
-var debug = document.getElementById('debug');
 
 var sourcelist = shuffle(["bud", "coors", "miller", "rainer", "pabst", "jenny","stone"]);
 
@@ -16,14 +12,14 @@ var ranker = {
         return Math.floor((this.max + this.min)/2);
     },
     worse:  function () {
-	if (this.done()) { return; }
-	this.max = this.doppel();
-      	this.check();
+	    if (this.done()) { return; }
+	    this.max = this.doppel();
+      this.check();
     },
     better: function () {
-	if (this.done()) { return; }
-	this.min = this.doppel()+1;
-        this.check();
+    	if (this.done()) { return; }
+    	this.min = this.doppel()+1;
+      this.check();
     },
     check: function () {
       if (this.min === this.max)
@@ -44,29 +40,23 @@ function paint() {
   if (ranker.done())
   {
      var listElement = document.createElement("ol");
-     all.appendChild(listElement);
+     $("#all").appendChild(listElement);
 	
      for( var i in ranker.ranking)
      {
       	var listItem = document.createElement("li");
-	listItem.innerHTML = ranker.ranking[i];
+	      listItem.innerHTML = ranker.ranking[i];
         listElement.appendChild(listItem);
      }
      return;
   }
-  right.textContent = ranker.candidate;
-  left.textContent = ranker.consideration();
+  $("#right").text(ranker.candidate);
+  $("#left").text(ranker.consideration());
 }
 paint();
 
-// create a simple instance
-// by default, it only adds horizontal recognizers
-var mca = new Hammer(all);
-var mcl = new Hammer(left);
-var mcr = new Hammer(right);
-// listen to events...
-mca.on("swipeleft", function(ev) { ranker.worse(); });
-mca.on("swiperight", function(ev) { ranker.better(); });
+$("#all").on("swipeleft", function(ev) { ranker.better(); });
+$("#all").on("swiperight", function(ev) { ranker.worse(); });
 //mcl.on("tap press", function(ev) { ranker.better(); });
 //mcr.on("tap press", function(ev) { ranker.worse(); });
 
@@ -77,4 +67,3 @@ function shuffle(o){ //v1.0
     for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
     return o;
 };
-

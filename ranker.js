@@ -2,6 +2,37 @@ $(document).ready(function(){
 
 var sourcelist = shuffle(["bud", "coors", "miller", "rainer", "pabst", "jenny","stone"]);
 
+var imgsourcelist = [
+  {
+    name: "budweiser",
+    img: "http://www.budweiser.com/jcr:content/openGraphImage.img.jpg/Facebook-Budweiser-01.jpg",
+  },
+  {
+    name: "coors",
+    img: "http://www.soupleys.com/files_uploaded/COORS6PKBOTnXJvlRHcpO3_yOZ.jpg",
+  },
+  {
+    name: "miller",
+    img: "http://upload.wikimedia.org/wikipedia/en/thumb/4/45/Miller_Brewery_Logo.svg/1280px-Miller_Brewery_Logo.svg.png",
+  },
+  {
+    name: "rainer",
+    img: "http://brewbound-images.s3.amazonaws.com/wp-content/uploads/2013/10/rainer-beer.jpg",
+  },
+  {
+    name: "pabst",
+    img: "http://upload.wikimedia.org/wikipedia/en/thumb/c/cd/Pabst_Blue_Ribbon_logo.svg/911px-Pabst_Blue_Ribbon_logo.svg.png",
+  },
+  {
+    name: "Genese",
+    img: "http://www.artzberger.com/BeerCans/newcans/canpics/GeneseeBeer0511.jpg",
+  },
+  {
+    name: "Yuengling",
+    img: "https://aleheads.files.wordpress.com/2012/01/yuengling.jpg",
+  },
+];
+
 var ranker = {
     ranking: [sourcelist.pop()],
     min : 0,

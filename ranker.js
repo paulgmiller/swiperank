@@ -34,10 +34,10 @@ var imgsourcelist = [
 ];
 
 var ranker = {
-    ranking: [sourcelist.pop()],
+    ranking: [imgsourcelist.pop()],
     min : 0,
     max : 1,
-    candidate: sourcelist.pop(),
+    candidate: imgsourcelist.pop(),
     done : false,
   	
     doppel: function () {
@@ -58,7 +58,7 @@ var ranker = {
       {
         this.ranking.splice(this.min, 0, this.candidate);
         //if sourcelist.empty done.
-      	this.candidate = sourcelist.pop();
+      	this.candidate = imgsourcelist.pop();
         this.min = 0;
         this.max = this.ranking.length;
       }
@@ -73,14 +73,15 @@ function paint() {
   {
      for( var i in ranker.ranking)
      {
-      	var item = $("<li></li>").text(ranker.ranking[i]);
-	$("ol").append(item);
+      	var item = $("<li></li>").text(ranker.ranking[i].name);
+        $("ol").append(item);
      }
      return;
   }
-  $("#right").text(ranker.candidate);
-  $("#left").text(ranker.consideration());
-
+  $("#right").text(ranker.candidate.name);
+  $('#right').prepend($('<img>',{src:ranker.candidate.img}))
+  $("#left").text(ranker.consideration().name);
+  $('#left').prepend($('<img>',{src:ranker.consideration().img}))
 }
 paint();
 
@@ -89,8 +90,6 @@ paint();
 $("#all").on("swipeleft", function(ev) { ranker.better(); });
 $("#all").on("swiperight", function(ev) { ranker.worse(); });
 
-//mcl.on("tap press", function(ev) { ranker.better(); });
-//mcr.on("tap press", function(ev) { ranker.worse(); });
 
 
 //+ Jonas Raoni Soares Silva

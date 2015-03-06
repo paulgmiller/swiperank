@@ -1,23 +1,29 @@
 
 #left {
-
+  vertical-align: top;
   height: 60%;
   width: 50%;
   float: left;
   text-align: center;
-  font: 40px/300px Helvetica, Arial, sans-serif;
+  font: 40px/30px Helvetica, Arial, sans-serif;
 
 }
 
 #right {
-
+  vertical-align: top;
   height: 60%;
   width: 50%;
   float:right;
   text-align: center;
-  font: 40px/300px Helvetica, Arial, sans-serif;
+  font: 40px/30px Helvetica, Arial, sans-serif;
 
 }
+
+img {
+  height: auto;
+  width: 100px;
+}
+
 #header {
 
   text-align: center;

@@ -5,7 +5,7 @@
   width: 50%;
   float: left;
   text-align: center;
-  font: 40px/30px Helvetica, Arial, sans-serif;
+  font: 40px/40px Helvetica, Arial, sans-serif;
 
 }
 
@@ -15,13 +15,13 @@
   width: 50%;
   float:right;
   text-align: center;
-  font: 40px/30px Helvetica, Arial, sans-serif;
+  font: 40px/40px Helvetica, Arial, sans-serif;
 
 }
 
 img {
-  height: auto;
-  width: 100px;
+  height: 200px;
+  width: auto;
 }
 
 #header {

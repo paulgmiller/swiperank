@@ -71,6 +71,9 @@ var ranker = {
 function paint() {
   if (ranker.done())
   {
+     $("#left").hide();
+     $("#right").hide();
+    
      for( var i in ranker.ranking)
      {
       	var item = $("<li></li>").text(ranker.ranking[i].name);
@@ -79,8 +82,10 @@ function paint() {
      return;
   }
   $("#right").text(ranker.candidate.name);
+  $('#right').prepend($('<br>'));
   $('#right').prepend($('<img>',{src:ranker.candidate.img}))
   $("#left").text(ranker.consideration().name);
+  $('#left').prepend($('<br>'));
   $('#left').prepend($('<img>',{src:ranker.consideration().img}))
 }
 paint();

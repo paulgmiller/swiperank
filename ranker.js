@@ -1,8 +1,6 @@
 $(document).ready(function(){
 
-var sourcelist = shuffle(["bud", "coors", "miller", "rainer", "pabst", "jenny","stone"]);
-
-var imgsourcelist = [
+var imgsourcelist = shuffle([
   {
     name: "budweiser",
     img: "http://www.budweiser.com/jcr:content/openGraphImage.img.jpg/Facebook-Budweiser-01.jpg",
@@ -24,14 +22,14 @@ var imgsourcelist = [
     img: "http://upload.wikimedia.org/wikipedia/en/thumb/c/cd/Pabst_Blue_Ribbon_logo.svg/911px-Pabst_Blue_Ribbon_logo.svg.png",
   },
   {
-    name: "Genese",
+    name: "genese",
     img: "http://www.artzberger.com/BeerCans/newcans/canpics/GeneseeBeer0511.jpg",
   },
   {
-    name: "Yuengling",
+    name: "yuengling",
     img: "https://aleheads.files.wordpress.com/2012/01/yuengling.jpg",
   },
-];
+]);
 
 var ranker = {
     ranking: [imgsourcelist.pop()],
@@ -92,9 +90,20 @@ paint();
 
 //$("#left").click(function(ev) { ranker.better(); });
 //$("#right").click(function(ev) { ranker.worse(); });
-$("#all").on("swipeleft", function(ev) { ranker.better(); });
-$("#all").on("swiperight", function(ev) { ranker.worse(); });
-
+$("#all").on("swipeleft", function(ev) { 
+  $( "#left" ).css("background-color", "green" );
+  setTimeout(function () {
+    $( "#left" ).css("background-color", "white" );
+    ranker.better(); 
+  }, 300);
+});
+$("#all").on("swiperight", function(ev) { 
+  $( "#right" ).css("background-color", "green" );
+  setTimeout(function () {
+    $( "#right" ).css("background-color", "white" );
+    ranker.worse(); 
+  }, 300);
+});
 
 
 //+ Jonas Raoni Soares Silva

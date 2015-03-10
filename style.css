@@ -6,6 +6,7 @@
   float: left;
   text-align: center;
   font: 40px/40px Helvetica, Arial, sans-serif;
+  border: 0px solid green;
 
 }
 
@@ -16,6 +17,7 @@
   float:right;
   text-align: center;
   font: 40px/40px Helvetica, Arial, sans-serif;
+  border: 0px solid green;
 
 }
 

@@ -209,6 +209,7 @@ var ranker = {
     max : 1,
     candidate: imgsourcelist.pop(),
     done : false,
+    cap : 10,
   	
     doppel: function () {
         return Math.floor((this.max + this.min)/2);
@@ -230,8 +231,27 @@ var ranker = {
         //if sourcelist.empty done.
       	this.candidate = imgsourcelist.pop();
         this.min = 0;
-        this.max = this.ranking.length;
+        if (this.ranking.length > this.cap)
+        {
+           this.ranking.pop();
+        }  
+        
+        if (this.ranking.length >= this.cap)
+        {  
+           this.max = (this.cap*2-1);
+        }
+        else
+        {
+           this.max = this.ranking.length; //start in the middle while we are under the cap
+        }
       }
+      else if (this.min >= this.cap)
+      {
+        this.candidate = imgsourcelist.pop();
+        this.min = 0;
+        this.max = (this.cap*2-1);
+      }
+      
       paint();
     },
     consideration : function() { return this.ranking[this.doppel()]},
@@ -254,7 +274,7 @@ function paint() {
   $("#right").text(ranker.candidate.name);
   $('#right').prepend($('<br>'));
   $('#right').prepend($('<img>',{src:ranker.candidate.img}))
-  $("#left").text(ranker.consideration().name);
+  $("#left").text(ranker.consideration().name + " " + (ranker.doppel()+1) + "/" + ranker.ranking.length);
   $('#left').prepend($('<br>'));
   $('#left').prepend($('<img>',{src:ranker.consideration().img}))
 }

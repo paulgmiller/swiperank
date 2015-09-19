@@ -1,7 +1,28 @@
 $(document).ready(function(){
 
-$.getJSON( "missamerica2016.json").fail(function(err) {
-    alert( "farts");
+var possible = [
+  //""miss_america_2001.json
+  //""miss_america_2002.json
+  //"miss_america_2003.json
+  //"miss_america_2004.json
+  "miss_america_2005.json",
+  "miss_america_2006.json",
+  "miss_america_2007.json",
+  "miss_america_2008.json",
+  "miss_america_2009.json",
+  "miss_america_2010.json",
+  "miss_america_2011.json",
+  "miss_america_2012.json",
+  "miss_america_2013.json",
+  "miss_america_2014.json",
+  "miss_america_2015.json",
+  "miss_america_2016.json",
+]
+var pick = shuffle(possible).pop();
+$("#title").text(pick);
+
+$.getJSON( pick).fail(function(err) {
+    alert( "couldn't load " + pick );
  }
 ).done(function( data ) {
 

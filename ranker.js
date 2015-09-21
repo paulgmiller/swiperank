@@ -2,7 +2,7 @@ $(document).ready(function(){
 
 var possible = [
   "miss_america_2001.json",
-  "miss_america_2002.json",
+  //"miss_america_2002.json",
   "miss_america_2003.json",
   "miss_america_2004.json",
   "miss_america_2005.json",

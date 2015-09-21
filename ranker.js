@@ -2,7 +2,7 @@ $(document).ready(function(){
 
 var possible = [
   "miss_america_2001.json",
-  //"miss_america_2002.json", //broken link 
+  "miss_america_2002.json",
   "miss_america_2003.json",
   "miss_america_2004.json",
   "miss_america_2005.json",
@@ -15,28 +15,25 @@ var possible = [
   "miss_america_2012.json",
   "miss_america_2013.json",
   "miss_america_2014.json",
-  //"miss_america_2015.json", wierd two parts pics
+  //"miss_america_2015.json",
   "miss_america_2016.json",
 ]
 var pick = shuffle(possible).pop();
 document.title = pick;
-
-var maxentries = $.url().param('max') || 25;
-var capRank = $.url().param('cap') || 10;
 
 $.getJSON( pick).fail(function(err) {
     alert( "couldn't load " + pick );
  }
 ).done(function( data ) {
 
-var imgsourcelist = shuffle(data).slice(0,maxentries);
+var imgsourcelist = shuffle(data);
 
 var ranker = {
     ranking: [imgsourcelist.pop()],
     min : 0,
     max : 1,
     candidate: imgsourcelist.pop(),
-    cap : capRank,
+    cap : 10,
   	
     doppel: function () {
         return Math.floor((this.max + this.min)/2);

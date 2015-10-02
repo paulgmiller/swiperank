@@ -18,7 +18,7 @@ var ranker = {
     min : 0,
     max : 1,
     candidate: imgsourcelist.pop(),
-    cap : 10,
+    cap : 20,
   	
     doppel: function () {
         return Math.floor((this.max + this.min)/2);

@@ -32,6 +32,12 @@ img {
   font: 20px/50px Helvetica, Arial, sans-serif;
 }
 
+#listname {
+
+  text-align: center;
+  font: 20px/50px Helvetica, Arial, sans-serif;
+}
+
 #all {
   width:100%;
   margin:0 auto;

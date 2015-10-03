@@ -19,7 +19,8 @@ var possible = [
   "miss_america_2016",
   "pornstars"
 ]
-var pick = $.url().param('list') || shuffle(possible).pop();
+alert($.url().param('list'));
+var pick =  shuffle(possible).pop();
 document.title = pick;
 $("#listname").text(pick);
 

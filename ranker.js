@@ -2,7 +2,6 @@ $(document).ready(function(){
 
 var possible = [
   "miss_america_2001",
-  //"miss_america_2002",
   "miss_america_2003",
   "miss_america_2004",
   "miss_america_2005",
@@ -15,9 +14,7 @@ var possible = [
   "miss_america_2012",
   "miss_america_2013",
   "miss_america_2014",
-  //"miss_america_2015",
   "miss_america_2016",
-  "pornstars"
 ]
 var query = URI(document.URL).query(true); 
 var pick =  query["list"] || shuffle(possible).pop();
@@ -36,7 +33,7 @@ var ranker = {
     min : 0,
     max : 1,
     candidate: imgsourcelist.pop(),
-    cap : 10,
+    cap :  query["cap"] || 10,
   	
     doppel: function () {
         return Math.floor((this.max + this.min)/2);
@@ -94,6 +91,7 @@ function paint() {
      for( var i in ranker.ranking)
      {
       	var item = $("<li></li>").text(ranker.ranking[i].name);
+        item.prepend($('<img>',{src:ranker.ranking[i].img}))
         $("ol").append(item);
      }
      return;

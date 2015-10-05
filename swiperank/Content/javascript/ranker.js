@@ -21,7 +21,7 @@ var pick =  query["list"] || shuffle(possible).pop();
 document.title = pick;
 $("#listname").text(pick);
 
-$.getJSON( pick + ".json").fail(function(err) {
+$.getJSON( "Content/lists/" + pick + ".json").fail(function(err) {
     alert( "couldn't load " + pick );
  }
 ).done(function( data ) {

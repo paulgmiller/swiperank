@@ -56,7 +56,8 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\nancy-logo.png" />
+    <Content Include="Content\css\style.css" />
+    <Content Include="Content\javascript\ranker.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -70,6 +71,23 @@
     </Content>
     <Content Include="packages.config" />
     <Content Include="Service References\Application Insights\ConnectedService.json" />
+    <Content Include="Content\lists\miss_america_2001.json" />
+    <Content Include="Content\lists\miss_america_2002.json" />
+    <Content Include="Content\lists\miss_america_2003.json" />
+    <Content Include="Content\lists\miss_america_2004.json" />
+    <Content Include="Content\lists\miss_america_2005.json" />
+    <Content Include="Content\lists\miss_america_2006.json" />
+    <Content Include="Content\lists\miss_america_2007.json" />
+    <Content Include="Content\lists\miss_america_2008.json" />
+    <Content Include="Content\lists\miss_america_2009.json" />
+    <Content Include="Content\lists\miss_america_2010.json" />
+    <Content Include="Content\lists\miss_america_2011.json" />
+    <Content Include="Content\lists\miss_america_2012.json" />
+    <Content Include="Content\lists\miss_america_2013.json" />
+    <Content Include="Content\lists\miss_america_2014.json" />
+    <Content Include="Content\lists\miss_america_2015.json" />
+    <Content Include="Content\lists\miss_america_2016.json" />
+    <Content Include="Content\lists\pornstars.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

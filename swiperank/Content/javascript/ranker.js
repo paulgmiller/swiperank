@@ -26,7 +26,8 @@ $.getJSON( "Content/lists/" + pick + ".json").fail(function(err) {
  }
 ).done(function( data ) {
 
-var imgsourcelist = shuffle(data);
+var max = query["max"] || data.length;
+var imgsourcelist = shuffle(data).slice(0,max);
 
 var ranker = {
     ranking: [imgsourcelist.pop()],
@@ -88,9 +89,11 @@ function paint() {
      $("#left").hide();
      $("#right").hide();
      $("#listname").text(pick);
-     var saveurl = "ranking/" + pick + "/" + Math.random().toString();
+     var saveurl = "ranking/" + pick;
      $.post(saveurl, JSON.stringify(ranker.ranking), function (data) {
          $("#listname").text("saved to " + saveurl);
+     }).fail(function (err) {
+         alert("coudn't save " + saveurl);
      });
     
      for( var i in ranker.ranking)

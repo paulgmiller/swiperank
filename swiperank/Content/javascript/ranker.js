@@ -87,6 +87,11 @@ function paint() {
   {
      $("#left").hide();
      $("#right").hide();
+     $("#listname").text(pick);
+     var saveurl = "ranking/" + pick + "/" + Math.random().toString();
+     $.post(saveurl, JSON.stringify(ranker.ranking), function (data) {
+         $("#listname").text("saved to " + saveurl);
+     });
     
      for( var i in ranker.ranking)
      {
@@ -105,8 +110,6 @@ function paint() {
 }
 paint();
 
-//$("#left").click(function(ev) { ranker.better(); });
-//$("#right").click(function(ev) { ranker.worse(); });
 $("#all").on("swipeleft", function(ev) { 
   $( "#left" ).css("background-color", "green" );
   setTimeout(function () {

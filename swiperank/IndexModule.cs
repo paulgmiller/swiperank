@@ -25,7 +25,7 @@
                 await rankings.CreateIfNotExistsAsync();
                 MD5 md5Hasher = MD5.Create();
                 var hash = md5Hasher.ComputeHash(this.Request.Body);
-                var blob = rankings.GetBlockBlobReference(param.list + "/" + BitConverter.ToString(hash).ToString());
+                var blob = rankings.GetBlockBlobReference(param.list + "/" + BitConverter.ToString(hash).ToString().Replace("=",""));
 
 
                 await blob.UploadFromStreamAsync(this.Request.Body);

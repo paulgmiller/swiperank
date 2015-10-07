@@ -94,7 +94,7 @@ function paint() {
      $.post(saveurl, JSON.stringify(ranker.ranking), function (data) {
          $("#listname").text("saved to " + url.host() + "/" + data);
      }).fail(function (err) {
-         alert("coudn't save ";
+         alert("coudn't save ");
      });
     
      for( var i in ranker.ranking)

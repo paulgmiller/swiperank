@@ -2,6 +2,7 @@
 {
     using Nancy;
     using Microsoft.WindowsAzure.Storage;
+    using Microsoft.WindowsAzure.Storage.Blob;
     using Microsoft.Azure;
     using System.Security.Cryptography;
     using System;
@@ -18,20 +19,28 @@
             //better if we take it an reject or return hash url
             Post["/ranking/{list}", runAsync: true] = async (param, token) =>
             {
-                var account = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=swiperankings;AccountKey=ReTB+/YWBrAeD7cC6//WrG2iRbG6D8ErOQRKI+Vcs5YJhXnQX/JFold6bsbW+Y5dFB9lGZUhoKpLat/o5b1gRA==");
-                //CloudConfigurationManager.GetSetting("swiperankings");
-                var client = account.CreateCloudBlobClient();
-
-                var rankings = client.GetContainerReference("rankings");
-                await rankings.CreateIfNotExistsAsync();
                 MD5 md5Hasher = MD5.Create();
                 var hash = md5Hasher.ComputeHash(this.Request.Body);
                 var relativeUrl = param.list + "/" + BitConverter.ToString(hash).ToString().Replace("-", "");
-                var blob = rankings.GetBlockBlobReference(relativeUrl);
+                var blob = Rankings().GetBlockBlobReference(relativeUrl);
                 this.Request.Body.Seek(0, System.IO.SeekOrigin.Begin);
                 await blob.UploadFromStreamAsync(this.Request.Body);
                 return relativeUrl;
             };
+
+            //better if we take it an reject or return hash url
+            Get["/ranking/{list}/{id}", runAsync: true] = async (param, token) =>
+            {
+                var blob = Rankings().GetBlockBlobReference(param.list + "/" + param.id);
+                return await blob.DownloadTextAsync();
+            };
+        }
+
+        private CloudBlobContainer Rankings()
+        {
+            var account = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=swiperankings;AccountKey=ReTB+/YWBrAeD7cC6//WrG2iRbG6D8ErOQRKI+Vcs5YJhXnQX/JFold6bsbW+Y5dFB9lGZUhoKpLat/o5b1gRA==");
+            var client = account.CreateCloudBlobClient();
+            return client.GetContainerReference("rankings");
         }
     }
 }

@@ -26,10 +26,11 @@
                 await rankings.CreateIfNotExistsAsync();
                 MD5 md5Hasher = MD5.Create();
                 var hash = md5Hasher.ComputeHash(this.Request.Body);
-                var blob = rankings.GetBlockBlobReference(param.list + "/" + BitConverter.ToString(hash).ToString().Replace("-",""));
+                var relativeUrl = param.list + "/" + BitConverter.ToString(hash).ToString().Replace("-", "");
+                var blob = rankings.GetBlockBlobReference(relativeUrl);
                 this.Request.Body.Seek(0, System.IO.SeekOrigin.Begin);
                 await blob.UploadFromStreamAsync(this.Request.Body);
-                return HttpStatusCode.OK;
+                return relativeUrl;
             };
         }
     }

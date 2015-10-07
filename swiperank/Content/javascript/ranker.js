@@ -16,7 +16,8 @@ var possible = [
   "miss_america_2014",
   "miss_america_2016",
 ]
-var query = URI(document.URL).query(true); 
+var url = URI(document.URL);
+var query = url.query(true); 
 var pick =  query["list"] || shuffle(possible).pop();
 document.title = pick;
 $("#listname").text(pick);
@@ -91,9 +92,9 @@ function paint() {
      $("#listname").text(pick);
      var saveurl = "ranking/" + pick;
      $.post(saveurl, JSON.stringify(ranker.ranking), function (data) {
-         $("#listname").text("saved to " + saveurl);
+         $("#listname").text("saved to " + url.host() + "/" + data);
      }).fail(function (err) {
-         alert("coudn't save " + saveurl);
+         alert("coudn't save ";
      });
     
      for( var i in ranker.ranking)

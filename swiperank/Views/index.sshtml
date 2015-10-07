@@ -17,7 +17,6 @@
        <div id="header">swipe to the better side</div>
 	   <div id="left"><img id="leftimg" src=""/>yin</div>
 	   <div id="right"><img id="rightimg" src="" />yang</div>
-	   <ol></ol>
 	</div>	
 </body>
 </html>

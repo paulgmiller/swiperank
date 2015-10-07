@@ -87,22 +87,12 @@ var ranker = {
 function paint() {
   if (ranker.done())
   {
-     $("#left").hide();
-     $("#right").hide();
-     $("#listname").text(pick);
      var saveurl = "ranking/" + pick;
      $.post(saveurl, JSON.stringify(ranker.ranking), function (data) {
-         $("#listname").text("saved to http://" + url.host() + "/" + data);
+          window.location = "http://" + url.host() + "/" + data;
      }).fail(function (err) {
          alert("coudn't save ");
      });
-    
-     for( var i in ranker.ranking)
-     {
-      	var item = $("<li></li>").text(ranker.ranking[i].name);
-        item.prepend($('<img>',{src:ranker.ranking[i].img}))
-        $("ol").append(item);
-     }
      return;
   }
   $("#right").text(ranker.candidate.name);

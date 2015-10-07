@@ -3,8 +3,9 @@
     using Nancy;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
-    using Microsoft.Azure;
     using System.Security.Cryptography;
+    using System.Collections.Generic;
+    using Newtonsoft.Json;
     using System;
 
     public class IndexModule : NancyModule
@@ -32,7 +33,9 @@
             Get["/ranking/{list}/{id}", runAsync: true] = async (param, token) =>
             {
                 var blob = Rankings().GetBlockBlobReference(param.list + "/" + param.id);
-                return await blob.DownloadTextAsync();
+                var json =  await blob.DownloadTextAsync();
+                var ranking = JsonConvert.DeserializeObject<List<Entry>>(json);
+                return View["ranking", ranking];
             };
         }
 
@@ -41,6 +44,12 @@
             var account = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=swiperankings;AccountKey=ReTB+/YWBrAeD7cC6//WrG2iRbG6D8ErOQRKI+Vcs5YJhXnQX/JFold6bsbW+Y5dFB9lGZUhoKpLat/o5b1gRA==");
             var client = account.CreateCloudBlobClient();
             return client.GetContainerReference("rankings");
+        }
+
+        public class Entry
+        {
+            public string name;
+            public string img;
         }
     }
 }

@@ -45,7 +45,7 @@ img {
 }
 
 ol li { 
-  text-align: center; 
+  text-align: left; 
   list-style-position:inside;
   font: 40px Helvetica, Arial, sans-serif;
 }

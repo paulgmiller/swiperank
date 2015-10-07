@@ -25,7 +25,7 @@
                 var blob = Rankings().GetBlockBlobReference(relativeUrl);
                 this.Request.Body.Seek(0, System.IO.SeekOrigin.Begin);
                 await blob.UploadFromStreamAsync(this.Request.Body);
-                return relativeUrl;
+                return "ranking/" + relativeUrl;
             };
 
             //better if we take it an reject or return hash url

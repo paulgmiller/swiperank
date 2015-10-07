@@ -4,7 +4,7 @@ var possible = [
   "miss_america_2001",
   "miss_america_2003",
   "miss_america_2004",
-  "miss_america_2005",
+  //"miss_america_2005",
   "miss_america_2006",
   "miss_america_2007",
   "miss_america_2008",
@@ -92,7 +92,7 @@ function paint() {
      $("#listname").text(pick);
      var saveurl = "ranking/" + pick;
      $.post(saveurl, JSON.stringify(ranker.ranking), function (data) {
-         $("#listname").text("saved to " + url.host() + "/" + data);
+         $("#listname").text("saved to http://" + url.host() + "/" + data);
      }).fail(function (err) {
          alert("coudn't save ");
      });

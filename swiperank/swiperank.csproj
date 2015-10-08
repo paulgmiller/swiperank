@@ -131,6 +131,8 @@
     <Content Include="packages.config" />
     <Content Include="Views\ranking.sshtml" />
     <Content Include="Content\lists\Miss_Universe_2014_Glamour.json" />
+    <Content Include="Content\lists\Miss_Universe_2013_Glamour.json" />
+    <Content Include="Content\lists\Miss_Universe_2014_Costumes.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

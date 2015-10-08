@@ -130,6 +130,7 @@
     <Content Include="Content\lists\pornstars.json" />
     <Content Include="packages.config" />
     <Content Include="Views\ranking.sshtml" />
+    <Content Include="Content\lists\Miss_Universe_2014_Glamour.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

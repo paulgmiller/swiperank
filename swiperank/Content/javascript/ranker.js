@@ -15,6 +15,7 @@ var possible = [
   "miss_america_2013",
   "miss_america_2014",
   "miss_america_2016",
+  "Miss_Universe_2014_Glamour",
 ]
 var url = URI(document.URL);
 var query = url.query(true); 

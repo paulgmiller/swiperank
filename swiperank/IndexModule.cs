@@ -34,7 +34,9 @@
             {
                 var blob = Rankings().GetBlockBlobReference(param.list + "/" + param.id);
                 var json =  await blob.DownloadTextAsync();
-                var ranking = JsonConvert.DeserializeObject<List<Entry>>(json);
+                //need to save and pass back cap/max and seed.
+                var ranking = JsonConvert.DeserializeObject<Ranking> (json);
+                ranking.ListName = param.list;
                 return View["ranking", ranking];
             };
         }
@@ -44,6 +46,11 @@
             var account = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=swiperankings;AccountKey=ReTB+/YWBrAeD7cC6//WrG2iRbG6D8ErOQRKI+Vcs5YJhXnQX/JFold6bsbW+Y5dFB9lGZUhoKpLat/o5b1gRA==");
             var client = account.CreateCloudBlobClient();
             return client.GetContainerReference("rankings");
+        }
+
+        public class Ranking : List<Entry>
+        {
+            public string ListName;
         }
 
         public class Entry

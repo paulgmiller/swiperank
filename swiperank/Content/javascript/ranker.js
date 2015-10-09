@@ -17,7 +17,8 @@ var possible = [
   "miss_america_2016",
   "Miss_Universe_2014_Glamour",
   "Miss_Universe_2013_Glamour",
-  "Miss_Universe_2014_Costume",
+  "Miss_Universe_2012_Glamour",  
+  "Miss_Universe_2014_Costumes",
 ]
 var url = URI(document.URL);
 var query = url.query(true); 

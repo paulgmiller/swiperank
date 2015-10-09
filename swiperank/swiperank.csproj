@@ -134,6 +134,10 @@
     <Content Include="Content\lists\Miss_Universe_2013_Glamour.json" />
     <Content Include="Content\lists\Miss_Universe_2014_Costumes.json" />
     <Content Include="Content\lists\Miss_Universe_2012_Glamour.json" />
+    <Content Include="Content\lists\Miss_Universe_2010_Glamour.json" />
+    <Content Include="Content\lists\Miss_Universe_2011_Glamour.json" />
+    <Content Include="Content\lists\Miss_Usa_2015_Glamour.json" />
+    <Content Include="Content\lists\puppies.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

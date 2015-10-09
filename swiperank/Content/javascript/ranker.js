@@ -18,10 +18,13 @@ var possible = [
   "Miss_Universe_2014_Glamour",
   "Miss_Universe_2013_Glamour",
   "Miss_Universe_2012_Glamour",
-  "Miss_Universe_2011_Glamour",
-  "Miss_Universe_2010_Glamour",
+  //"Miss_Universe_2011_Glamour", Watermarks
+  //"Miss_Universe_2010_Glamour",
   "Miss_Universe_2014_Costumes",
   "Miss_Usa_2015_Glamour",
+  "Miss_Usa_2014_Glamour",
+  "Miss_Usa_2013_Glamour",
+  "Miss_Usa_2012_Glamour",
   "puppies",
 ]
 var url = URI(document.URL);

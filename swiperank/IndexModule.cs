@@ -39,13 +39,41 @@
                 ranking.ListName = param.list;
                 return View["ranking", ranking];
             };
+
+            //better if we take it an reject or return hash url
+            Post["/list/{list}", runAsync: true] = async (param, token) =>
+            {
+                await Lists().CreateIfNotExistsAsync();
+                var blob = Lists().GetBlockBlobReference(param.list);
+                if (await blob.CheckExistsAsnyc())
+                    return HttpStatusCode.Conflict;
+                await blob.UploadFromStreamAsync(this.Request.Body);
+                return HttpStatusCode.Created;
+            };
+
+            //better if we take it an reject or return hash url
+            Get["/list/{list}", runAsync: true] = async (param, token) =>
+            {
+                var blob = Lists().GetBlockBlobReference(param.list);
+                return await  blob.DownloadTextAsync();
+            };
         }
+
+        private CloudBlobClient Client()
+        {
+            var account = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=swiperankings;AccountKey=ReTB+/YWBrAeD7cC6//WrG2iRbG6D8ErOQRKI+Vcs5YJhXnQX/JFold6bsbW+Y5dFB9lGZUhoKpLat/o5b1gRA==");
+            return account.CreateCloudBlobClient();
+        }
+
 
         private CloudBlobContainer Rankings()
         {
-            var account = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=swiperankings;AccountKey=ReTB+/YWBrAeD7cC6//WrG2iRbG6D8ErOQRKI+Vcs5YJhXnQX/JFold6bsbW+Y5dFB9lGZUhoKpLat/o5b1gRA==");
-            var client = account.CreateCloudBlobClient();
-            return client.GetContainerReference("rankings");
+            return Client().GetContainerReference("rankings");
+        }
+
+        private CloudBlobContainer Lists()
+        {
+            return Client().GetContainerReference("lists");
         }
 
         public class Ranking : List<Entry>

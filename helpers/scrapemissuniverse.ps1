@@ -4,7 +4,6 @@ $profiles = gc contestants.txt | select-string  "members/profile"  | % { $_.line
 $profiles | % {
   $r = Invoke-webrequest ("http://missuniverse.com" + $_);
   $name = $r.AllElements | ? { $_.tagName -eq "title" }
-  $i= $r.Images | ? { $_.src -match "photo_cron" }
-  $img = $i[0]
-  @{ name=$name.innerHTML;img=$img.src }
- } 
+  $img = $r.Images | ? { $_.src -match "photographer_uploaded" } 
+  @{ name=$name.innerHTML;img=$img[2].src }
+ } | convertto-json

@@ -111,37 +111,8 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Service References\Application Insights\ConnectedService.json" />
-    <Content Include="Content\lists\miss_america_2001.json" />
-    <Content Include="Content\lists\miss_america_2002.json" />
-    <Content Include="Content\lists\miss_america_2003.json" />
-    <Content Include="Content\lists\miss_america_2004.json" />
-    <Content Include="Content\lists\miss_america_2005.json" />
-    <Content Include="Content\lists\miss_america_2006.json" />
-    <Content Include="Content\lists\miss_america_2007.json" />
-    <Content Include="Content\lists\miss_america_2008.json" />
-    <Content Include="Content\lists\miss_america_2009.json" />
-    <Content Include="Content\lists\miss_america_2010.json" />
-    <Content Include="Content\lists\miss_america_2011.json" />
-    <Content Include="Content\lists\miss_america_2012.json" />
-    <Content Include="Content\lists\miss_america_2013.json" />
-    <Content Include="Content\lists\miss_america_2014.json" />
-    <Content Include="Content\lists\miss_america_2015.json" />
-    <Content Include="Content\lists\miss_america_2016.json" />
-    <Content Include="Content\lists\pornstars.json" />
     <Content Include="packages.config" />
     <Content Include="Views\ranking.sshtml" />
-    <Content Include="Content\lists\Miss_Universe_2014_Glamour.json" />
-    <Content Include="Content\lists\Miss_Universe_2013_Glamour.json" />
-    <Content Include="Content\lists\Miss_Universe_2014_Costumes.json" />
-    <Content Include="Content\lists\Miss_Universe_2012_Glamour.json" />
-    <Content Include="Content\lists\Miss_Universe_2010_Glamour.json" />
-    <Content Include="Content\lists\Miss_Universe_2011_Glamour.json" />
-    <Content Include="Content\lists\Miss_Usa_2015_Glamour.json" />
-    <Content Include="Content\lists\puppies.json" />
-    <Content Include="Content\lists\Miss_Usa_2012_Glamour.json" />
-    <Content Include="Content\lists\Miss_Usa_2013_Glamour.json" />
-    <Content Include="Content\lists\Miss_Usa_2014_Glamour.json" />
-    <Content Include="Content\lists\Miss_Universe_2014_Gown.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

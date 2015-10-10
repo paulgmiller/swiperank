@@ -32,8 +32,8 @@
             //better if we take it an reject or return hash url
             Get["/ranking/{list}/{id}", runAsync: true] = async (param, token) =>
             {
-                var blob = Rankings().GetBlockBlobReference(param.list + "/" + param.id);
-                if (await !blob.CheckExistsAsnyc())
+                CloudBlockBlob blob = Rankings().GetBlockBlobReference(param.list + "/" + param.id);
+                if (!await blob.ExistsAsync())
                     return HttpStatusCode.NotFound;
 
                 var json =  await blob.DownloadTextAsync();
@@ -47,8 +47,8 @@
             Post["/list/{list}", runAsync: true] = async (param, token) =>
             {
                 await Lists().CreateIfNotExistsAsync();
-                var blob = Lists().GetBlockBlobReference(param.list);
-                if (await blob.CheckExistsAsnyc())
+                CloudBlockBlob blob = Lists().GetBlockBlobReference(param.list);
+                if (await blob.ExistsAsync())
                     return HttpStatusCode.Conflict;
                 await blob.UploadFromStreamAsync(this.Request.Body);
                 return HttpStatusCode.Created;
@@ -57,8 +57,8 @@
             //better if we take it an reject or return hash url
             Get["/list/{list}", runAsync: true] = async (param, token) =>
             {
-                var blob = Lists().GetBlockBlobReference(param.list);
-                if (await !blob.CheckExistsAsnyc())
+                CloudBlockBlob blob = Lists().GetBlockBlobReference(param.list);
+                if (!await blob.ExistsAsync())
                     return HttpStatusCode.NotFound;
                 return await  blob.DownloadTextAsync();
             };

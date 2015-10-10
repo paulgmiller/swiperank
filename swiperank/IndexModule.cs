@@ -17,7 +17,6 @@
                 return View["index"];
             };
 
-            //better if we take it an reject or return hash url
             Post["/ranking/{list}", runAsync: true] = async (param, token) =>
             {
                 MD5 md5Hasher = MD5.Create();
@@ -29,7 +28,6 @@
                 return "ranking/" + relativeUrl;
             };
 
-            //better if we take it an reject or return hash url
             Get["/ranking/{list}/{id}", runAsync: true] = async (param, token) =>
             {
                 CloudBlockBlob blob = Rankings().GetBlockBlobReference(param.list + "/" + param.id);
@@ -43,11 +41,21 @@
                 return View["ranking", ranking];
             };
 
-            //better if we take it an reject or return hash url
             Post["/list/{list}", runAsync: true] = async (param, token) =>
             {
-                await Lists().CreateIfNotExistsAsync();
                 CloudBlockBlob blob = Lists().GetBlockBlobReference(param.list);
+                if (await blob.ExistsAsync())
+                    return HttpStatusCode.Conflict;
+                await blob.UploadFromStreamAsync(this.Request.Body);
+                return HttpStatusCode.Created;
+            };
+
+            //better if we take it an reject or return hash url
+            Post["/images/{img}", runAsync: true] = async (param, token) =>
+            {
+                var images = Client().GetContainerReference("images");
+                await images.CreateIfNotExistsAsync();
+                CloudBlockBlob blob = images.GetBlockBlobReference(param.img);
                 if (await blob.ExistsAsync())
                     return HttpStatusCode.Conflict;
                 await blob.UploadFromStreamAsync(this.Request.Body);

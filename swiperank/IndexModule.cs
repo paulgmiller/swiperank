@@ -33,6 +33,9 @@
             Get["/ranking/{list}/{id}", runAsync: true] = async (param, token) =>
             {
                 var blob = Rankings().GetBlockBlobReference(param.list + "/" + param.id);
+                if (await !blob.CheckExistsAsnyc())
+                    return HttpStatusCode.NotFound;
+
                 var json =  await blob.DownloadTextAsync();
                 //need to save and pass back cap/max and seed.
                 var ranking = JsonConvert.DeserializeObject<Ranking> (json);
@@ -55,6 +58,8 @@
             Get["/list/{list}", runAsync: true] = async (param, token) =>
             {
                 var blob = Lists().GetBlockBlobReference(param.list);
+                if (await !blob.CheckExistsAsnyc())
+                    return HttpStatusCode.NotFound;
                 return await  blob.DownloadTextAsync();
             };
         }

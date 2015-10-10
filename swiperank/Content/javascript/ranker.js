@@ -33,7 +33,7 @@ var pick =  query["list"] || shuffle(possible).pop();
 document.title = pick;
 $("#listname").text(pick);
 
-$.getJSON( "/lists/" + pick).fail(function(err) {
+$.getJSON( "/list/" + pick).fail(function(err) {
     alert( "couldn't load " + pick );
  }
 ).done(function( data ) {

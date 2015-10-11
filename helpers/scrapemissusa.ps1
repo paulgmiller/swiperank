@@ -5,6 +5,6 @@ $profiles | % {
   $r = Invoke-webrequest ("http://missuniverse.com" + $_);
   $name = $r.AllElements | ? { $_.tagName -eq "title" }
   $i= $r.Images | ? { $_.src -match "photographer" }
-  $img = $i[0]
+  $img = $i[1]
   @{ name=$name.innerHTML;img=$img.src }
  } 

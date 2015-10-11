@@ -13,15 +13,18 @@
     {
         public IndexModule()
         {
-            Get["/"] = parameters =>
+            Get["/rank"] = parameters =>
             {
                 return View["index"];
             };
 
-            Get["/alllists"] = parameters =>
+            
+            Get["/"] = Get["/alllists"] = parameters =>
             {
                 IEnumerable<IListBlobItem> all = Lists().ListBlobs();
-                var names = all.Select(b => b.Uri.PathAndQuery.Split('/').Last());              
+                var names = all.Select(b => b.Uri.PathAndQuery.Split('/').Last());
+                //limited black list 
+                names = names.Where(n => !n.ToLower().Contains("porn"));
                 return View["alllists", names];
             };
 

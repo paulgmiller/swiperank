@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="content/css/style.css">
 </head>
 <body>
-	<div id = "rerank"><a href="/?list=@Model.ListName">Re-rank this list</a></div>
+	<div id = "rerank"><a href="/rank?list=@Model.ListName">Re-rank this list</a></div>
 	<div id = "all">
 		<ol>
 		@Each

@@ -113,6 +113,7 @@
     <Content Include="Service References\Application Insights\ConnectedService.json" />
     <Content Include="packages.config" />
     <Content Include="Views\ranking.sshtml" />
+    <Content Include="Views\alllists.sshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

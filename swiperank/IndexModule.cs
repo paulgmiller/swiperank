@@ -7,6 +7,7 @@
     using System.Collections.Generic;
     using Newtonsoft.Json;
     using System;
+    using System.Linq;
 
     public class IndexModule : NancyModule
     {
@@ -15,6 +16,13 @@
             Get["/"] = parameters =>
             {
                 return View["index"];
+            };
+
+            Get["/alllists"] = parameters =>
+            {
+                IEnumerable<IListBlobItem> all = Lists().ListBlobs();
+                var names = all.Select(b => b.Uri.PathAndQuery.Split('/').Last());              
+                return View["alllists", names];
             };
 
             Post["/ranking/{list}", runAsync: true] = async (param, token) =>
@@ -46,6 +54,7 @@
                 CloudBlockBlob blob = Lists().GetBlockBlobReference(param.list);
                 if (await blob.ExistsAsync())
                     return HttpStatusCode.Conflict;
+                //could cache images here
                 await blob.UploadFromStreamAsync(this.Request.Body);
                 return HttpStatusCode.Created;
             };

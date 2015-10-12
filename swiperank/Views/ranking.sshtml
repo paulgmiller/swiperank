@@ -12,7 +12,7 @@
 	<div id = "all">
 		<ol>
 		@Each
-		<li><img src="@Current.img" />@Current.name</li>
+		<li>@Current.name<br/><img src="@Current.img" /></li>
 		@EndEach
 		</ol>
 	</div>	

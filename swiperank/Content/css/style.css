@@ -22,20 +22,20 @@
 }
 
 img {
-  height: auto;
+  height: 200px;
   width: auto;
 }
 
 #header {
 
   text-align: center;
-  font: 20px/50px Helvetica, Arial, sans-serif;
+  font: 20px/30px Helvetica, Arial, sans-serif;
 }
 
 #listname {
 
   text-align: center;
-  font: 20px/50px Helvetica, Arial, sans-serif;
+  font: 20px/30px Helvetica, Arial, sans-serif;
 }
 
 #all {

@@ -1,8 +1,17 @@
-﻿
+﻿div {
+  width: 100%;
+}
+ 
+h2 {
+  font: 400 40px/1.5 Helvetica, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+ 
 ul {
   list-style-type: none;
   margin: 0;
-  padding: 10px;
+  padding: 20;
 }
  
 li {
@@ -18,5 +27,6 @@ li a {
   text-decoration: none;
   color: #000;
   display: block;
+  width: 100%;
 }
  

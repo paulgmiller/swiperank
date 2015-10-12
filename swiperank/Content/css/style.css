@@ -22,8 +22,8 @@
 }
 
 img {
-  height: 300px;
-  width: auto;
+  height: auto;
+  width: 100%;
 }
 
 #header {

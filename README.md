@@ -12,3 +12,8 @@ Online ranking using side by comparisons and swiping.
 * tree collapse 
 * advertising
 
+##To Scrape.
+* http://pinupart.tumblr.com/
+* Red carpet (people)
+* Sexiest Man candidate people. 
+* NFL/NBA Teams

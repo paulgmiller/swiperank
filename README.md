@@ -7,13 +7,11 @@ Online ranking using side by comparisons and swiping.
 
 * Force all images to same ratio or leave whitespace or go back to hardcoding height. 
 * move out azure connection strings.
-* I'm done button.
-* go back all lists from ranking
 * tree collapse 
 * advertising
+* css theme.
 
 ##To Scrape.
-* http://pinupart.tumblr.com/
 * Red carpet (people)
 * Sexiest Man candidate people. 
 * NFL/NBA Teams

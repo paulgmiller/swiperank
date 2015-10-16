@@ -27,21 +27,23 @@ img {
 }
 
 #header {
-
   text-align: center;
   font: 20px/30px Helvetica, Arial, sans-serif;
 }
 
 #listname {
+  text-align: center;
+  font: 20px/30px Helvetica, Arial, sans-serif;
+}
 
+#done {
   text-align: center;
   font: 20px/30px Helvetica, Arial, sans-serif;
 }
 
 #all {
   width:100%;
-  margin:0 auto;
-  
+  margin:0 auto;  
 }
 
 ol li { 

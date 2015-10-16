@@ -98,12 +98,7 @@ var ranker = {
 function paint() {
   if (ranker.done())
   {
-     var saveurl = "ranking/" + pick;
-     $.post(saveurl, JSON.stringify(ranker.ranking), function (data) {
-          window.location = "http://" + url.host() + "/" + data;
-     }).fail(function (err) {
-         alert("coudn't save ");
-     });
+     finish();
      return;
   }
   $("#right").text(ranker.candidate.name);
@@ -113,7 +108,20 @@ function paint() {
   $('#left').prepend($('<br>'));
   $('#left').prepend($('<img>',{src:ranker.consideration().img}))
 }
+
+function finish()
+{
+    var saveurl = "ranking/" + pick;
+    $.post(saveurl, JSON.stringify(ranker.ranking), function (data) {
+        window.location = "http://" + url.host() + "/" + data;
+    }).fail(function (err) {
+        alert("coudn't save ");
+    });
+}
+
 paint();
+
+ 
 
 $("#all").on("swipeleft", function(ev) { 
   $( "#left" ).css("background-color", "green" );
@@ -129,6 +137,11 @@ $("#all").on("swiperight", function(ev) {
     ranker.worse(); 
   }, 300);
 });
+
+$("#done").click(function () {
+    finish();
+});
+
 
 
 

@@ -10,8 +10,11 @@ Online ranking using side by comparisons and swiping.
 * tree collapse 
 * advertising
 * css theme.
+*list pubishing form
+**auto image search for form.
+*links back to content.
 
 ##To Scrape.
 * Red carpet (people)
 * Sexiest Man candidate people. 
-* NFL/NBA Teams
+* MLB/NBA Teams

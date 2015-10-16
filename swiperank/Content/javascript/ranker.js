@@ -38,7 +38,7 @@ $.getJSON( "/list/" + pick).fail(function(err) {
  }
 ).done(function( data ) {
 
-var max = query["max"] || Math.min(20, data.length);
+var max = query["max"] || Math.min(32, data.length);
 var imgsourcelist = shuffle(data).slice(0,max);
 
 var ranker = {

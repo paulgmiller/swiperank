@@ -19,6 +19,18 @@
 		<li>@Current.name<br/><img src="@Current.img" /></li>
 		@EndEach
 		</ol>
-	</div>	
+	</div>
+	<div id="adsense">
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<!-- End Of Ranking -->
+	<ins class="adsbygoogle"
+		 style="display:block"
+		 data-ad-client="ca-pub-2102328861606025"
+		 data-ad-slot="6358793999"
+		 data-ad-format="auto"></ins>
+	<script>
+	(adsbygoogle = window.adsbygoogle || []).push({});
+	</script>	
+	</div>
 </body>
 </html>

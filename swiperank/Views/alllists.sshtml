@@ -10,7 +10,7 @@
 <body>
 	<div id = "all">
 		<ul>
-		<li><a href="/rank"/>Random!</a></li>
+		<li><a href="/random"/>Random!</a></li>
 		@Each
 		<li><a href="/rank?list=@Current" />@Current</li>
 		@EndEach

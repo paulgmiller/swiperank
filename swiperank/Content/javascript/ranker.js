@@ -1,35 +1,8 @@
 $(document).ready(function(){
 
-var possible = [
-  "miss_america_2001",
-  "miss_america_2003",
-  "miss_america_2004",
-  "miss_america_2006",
-  "miss_america_2007",
-  "miss_america_2008",
-  "miss_america_2009",
-  "miss_america_2010",
-  "miss_america_2011",
-  "miss_america_2012",
-  "miss_america_2013",
-  "miss_america_2014",
-  "miss_america_2016",
-  "Miss_Universe_2014_Glamour",
-  "Miss_Universe_2013_Glamour",
-  "Miss_Universe_2012_Glamour",
-  "Miss_Universe_2014_Closeup",
-  "Miss_Universe_2013_Closeup",
-  "Miss_Universe_2012_Closeup",
-  "Miss_Universe_2014_Costumes",
-  "Miss_Usa_2015_Glamour",
-  "Miss_Usa_2014_Glamour",
-  "Miss_Usa_2013_Glamour",
-  "Miss_Usa_2012_Glamour",
-  "puppies",
-]
 var url = URI(document.URL);
 var query = url.query(true); 
-var pick =  query["list"] || shuffle(possible).pop();
+var pick =  query["list"] || "no list specified";
 document.title = pick;
 $("#listname").text(pick);
 

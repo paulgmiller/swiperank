@@ -13,19 +13,24 @@
     {
         public IndexModule()
         {
+            Get["/random"] = parameters =>
+            {
+                var all = AllLists().ToList();
+                var r = new Random();
+                var pick = all[r.Next(0, all.Count())];
+                return Response.AsRedirect("/rank?list=" + pick);
+            };
+
             Get["/rank"] = parameters =>
             {
+                if (string.IsNullOrEmpty(this.Request.Query["list"]))
+                    return Response.AsRedirect("/random");
                 return View["index"];
             };
 
-            
             Get["/"] = Get["/alllists"] = parameters =>
             {
-                IEnumerable<IListBlobItem> all = Lists().ListBlobs();
-                var names = all.Select(b => b.Uri.PathAndQuery.Split('/').Last());
-                //limited black list 
-                names = names.Where(n => !n.ToLower().Contains("porn"));
-                return View["alllists", names];
+               return View["alllists", AllLists()];
             };
 
             Post["/ranking/{list}", runAsync: true] = async (param, token) =>
@@ -83,6 +88,15 @@
                 return await  blob.DownloadTextAsync();
             };
         }
+
+        private IEnumerable<string> AllLists() //todo switch to async
+        {
+            IEnumerable<IListBlobItem> all = Lists().ListBlobs();
+            var names = all.Select(b => b.Uri.PathAndQuery.Split('/').Last());
+            //limited black list 
+            return names.Where(n => !n.ToLower().Contains("porn"));
+        }
+
 
         private CloudBlobClient Client()
         {

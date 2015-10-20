@@ -17,7 +17,7 @@
        <div id="header">swipe to the better side</div>
 	   <div id="left"><img id="leftimg" src=""/></div>
 	   <div id="right"><img id="rightimg" src="" /></div>
-	   <div id="done"><a href="#">I'm done</a></div>
-	</div>	
+	</div>
+	<div id="done"><a href="#">I'm done</a></div>	
 </body>
 </html>

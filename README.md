@@ -8,13 +8,13 @@ Online ranking using side by comparisons and swiping.
 * Force all images to same ratio or leave whitespace or go back to hardcoding height. 
 * move out azure connection strings.
 * tree collapse 
-* advertising
+* advertising (repplication)
 * css theme.
 *list pubishing form
 **auto image search for form.
 *links back to content.
 
 ##To Scrape.
-* Red carpet (people)
+* Oscar red carpet
 * Sexiest Man candidate people. 
-* MLB/NBA Teams
+* MLB/NHL Teams, fix nba

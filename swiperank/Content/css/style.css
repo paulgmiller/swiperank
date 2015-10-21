@@ -56,7 +56,17 @@ ol li {
   text-align: left; 
   list-style-position:inside;
   font: 20px/30px Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
 }
+
+ol { 
+  text-align: left; 
+  list-style-position:inside;
+  margin: 0;
+  padding: 0;
+}
+
 
 
 /* Layout */

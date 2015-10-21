@@ -2,9 +2,10 @@ $(document).ready(function(){
 
 var url = URI(document.URL);
 var query = url.query(true); 
-var pick =  query["list"] || "no list specified";
-document.title = pick;
-$("#listname").text(pick);
+var pick = query["list"] || "no list specified";
+var ppick = new String(pick).replace("_", " ");
+document.title = ppick;
+$("#listname").text(ppick);
 
 $.getJSON( "/list/" + pick).fail(function(err) {
     alert( "couldn't load " + pick );
@@ -94,7 +95,6 @@ function finish()
 
 paint();
 
- 
 
 $("#all").on("swipeleft", function(ev) { 
   $( "#left" ).css("background-color", "green" );
@@ -116,8 +116,6 @@ $("#done").click(function () {
 });
 
 
-
-
 })});
 
 //+ Jonas Raoni Soares Silva
@@ -126,6 +124,7 @@ function shuffle(o){ //v1.0
     for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
     return o;
 };
+
 
 $(document).on("pageshow", "[data-role='page']", function () {
  $('div.ui-loader').remove();

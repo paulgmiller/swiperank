@@ -54,6 +54,7 @@
                 //need to save and pass back cap/max and seed.
                 var ranking = JsonConvert.DeserializeObject<Ranking> (json);
                 ranking.ListName = param.list;
+                ranking.ListName = ranking.ListName.Replace("_", " ");
                 return View["ranking", ranking];
             };
 

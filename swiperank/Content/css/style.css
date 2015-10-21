@@ -26,7 +26,17 @@ img {
   width: 100%;
 }
 
-#header #done #listname  {
+#header {
+  text-align: center;
+  font: 20px/30px Helvetica, Arial, sans-serif;
+}
+
+#listname {
+  text-align: center;
+  font: 20px/30px Helvetica, Arial, sans-serif;
+}
+
+#done {
   text-align: center;
   font: 20px/30px Helvetica, Arial, sans-serif;
 }
@@ -45,8 +55,6 @@ img {
 ol li { 
   text-align: left; 
   list-style-position:inside;
-  margin:0;
-  padding:0;
   font: 20px/30px Helvetica, Arial, sans-serif;
 }
 

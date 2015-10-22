@@ -7,9 +7,9 @@ Online ranking using side by comparisons and swiping.
 
 * Force all images to same ratio or leave whitespace or go back to hardcoding height. 
 * move out azure connection strings.
-* tree collapse 
-* advertising (repplication)
-* css theme.
+* tree collapse (use / for sub lists)
+* advertising (raepplication, about page)
+* css theme. (jquery mobile?)
 *list pubishing form
 **auto image search for form.
 *links back to content.
@@ -18,3 +18,4 @@ Online ranking using side by comparisons and swiping.
 * Oscar red carpet
 * Sexiest Man candidate people. 
 * MLB/NHL Teams, fix nba
+* NFL/college football cheerleaders

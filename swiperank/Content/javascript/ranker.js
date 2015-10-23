@@ -115,6 +115,9 @@ $("#done").click(function () {
     finish();
 });
 
+$("#goback").click(function () {
+    window.location = "http://" + url.host()
+});
 
 })});
 

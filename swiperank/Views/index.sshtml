@@ -19,8 +19,8 @@
 	   <div id="right"><img id="rightimg" src="" /></div>
 	</div>
 	<div id="footer">
-		<a href="#" id="done">I'm done</a>
-		<a href="/" id="goback">Show me other lists</a>
+		<a href="#" id="done">I'm done</a><br />
+		<a href="#" id="goback">Show me other lists</a>
 	</div>
 </body>
 </html>

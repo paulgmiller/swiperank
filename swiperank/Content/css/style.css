@@ -83,3 +83,11 @@ body > #all { height: auto; min-height: 100%; }
 html {
   -ms-touch-action : pan-y;
 }
+
+.fb-share-button {
+    vertical-align: top;
+    transform: scale(1.4);
+    transform-origin: top left;
+}
+
+

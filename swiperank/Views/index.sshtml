@@ -18,6 +18,9 @@
 	   <div id="left"><img id="leftimg" src=""/></div>
 	   <div id="right"><img id="rightimg" src="" /></div>
 	</div>
-	<div id="done"><a href="#">I'm done</a></div>	
+	<div id="footer">
+		<a href="#" id="done">I'm done</a>
+		<a href="/" id="goback">Show me other lists</a>
+	</div>
 </body>
 </html>

@@ -8,14 +8,18 @@
     using Newtonsoft.Json;
     using System;
     using System.Linq;
+    using System.Threading.Tasks;
+    using System.Text;
+    using System.Net.Http;
+    using System.IO;
 
     public class IndexModule : NancyModule
     {
         public IndexModule()
         {
-            Get["/random"] = parameters =>
+            Get["/random", runAsync: true] = async (param, token) =>
             {
-                var all = AllLists().ToList();
+                var all = (await AllLists()).ToList();
                 var r = new Random();
                 var pick = all[r.Next(0, all.Count())];
                 return Response.AsRedirect("/rank?list=" + pick);
@@ -28,9 +32,24 @@
                 return View["index"];
             };
 
-            Get["/"] = Get["/alllists"] = parameters =>
+            Get["/", runAsync: true] = Get["/alllists", runAsync: true] = async (param, token) =>
             {
-               return View["alllists", AllLists()];
+               return View["alllists", await AllLists()];
+            };
+
+            Get["/cacheimages", runAsync: true] = async (param, token) =>
+            {
+                var lists = await AllLists();
+                await Task.WhenAll(lists.Select(async l =>
+                {
+                    CloudBlockBlob blob = Lists().GetBlockBlobReference(l);
+                    var list = JsonConvert.DeserializeObject<IEnumerable<Entry>>(await blob.DownloadTextAsync());
+                    await CacheImages(list);
+                    blob.CreateSnapshot();
+                    await blob.UploadTextAsync(JsonConvert.SerializeObject(list));
+                }));
+                return HttpStatusCode.OK;
+
             };
 
             Post["/ranking/{list}", runAsync: true] = async (param, token) =>
@@ -44,9 +63,9 @@
                 return "ranking/" + relativeUrl;
             };
 
-            Get["/ranking/{list}/{id}", runAsync: true] = async (param, token) =>
+            Get["/ranking/{list}/{hash}", runAsync: true] = async (param, token) =>
             {
-                CloudBlockBlob blob = Rankings().GetBlockBlobReference(param.list + "/" + param.id);
+                CloudBlockBlob blob = Rankings().GetBlockBlobReference(param.list + "/" + param.hash);
                 if (!await blob.ExistsAsync())
                     return HttpStatusCode.NotFound;
 
@@ -54,28 +73,26 @@
                 //need to save and pass back cap/max and seed.
                 var ranking = JsonConvert.DeserializeObject<Ranking> (json);
                 ranking.ListName = param.list;
-                ranking.PrettyListName = ranking.ListName.Replace("_", " ");
+                ranking.Hash = param.hash;
                 return View["ranking", ranking];
             };
 
             Post["/list/{list}", runAsync: true] = async (param, token) =>
             {
                 CloudBlockBlob blob = Lists().GetBlockBlobReference(param.list);
+                
                 if (await blob.ExistsAsync())
                     return HttpStatusCode.Conflict;
                 //could cache images here
-                await blob.UploadFromStreamAsync(this.Request.Body);
-                return HttpStatusCode.Created;
-            };
+                using (var sr = new StreamReader(this.Request.Body))
+                using (var jsonTextReader = new JsonTextReader(sr))
+                {
+                    var serializer = new JsonSerializer();
+                    var list = serializer.Deserialize<IEnumerable<Entry>>(jsonTextReader);
+                    await CacheImages(list);
+                    await blob.UploadTextAsync(JsonConvert.SerializeObject(list));
+                }
 
-            //better if we take it an reject or return hash url
-            Post["/images/{img}", runAsync: true] = async (param, token) =>
-            {
-                var images = Client().GetContainerReference("images");
-                await images.CreateIfNotExistsAsync();
-                CloudBlockBlob blob = images.GetBlockBlobReference(param.img);
-                if (await blob.ExistsAsync())
-                    return HttpStatusCode.Conflict;
                 await blob.UploadFromStreamAsync(this.Request.Body);
                 return HttpStatusCode.Created;
             };
@@ -90,12 +107,33 @@
             };
         }
 
-        private IEnumerable<string> AllLists() //todo switch to async
+        private async Task<IEnumerable<string>> AllLists() //todo switch to async
         {
-            IEnumerable<IListBlobItem> all = Lists().ListBlobs();
-            var names = all.Select(b => b.Uri.PathAndQuery.Split('/').Last());
+            var all = await Lists().ListBlobsSegmentedAsync(null); //todo figure out what todo when we have 5k + 
+            var names = all.Results.Select(b => b.Uri.PathAndQuery.Split('/').Last());
             //limited black list 
-            return names.Where(n => !n.ToLower().Contains("porn"));
+            return names.Where(n => !n.ToLower().Contains("porn")).OrderBy(n => n, StringComparer.OrdinalIgnoreCase);
+        }
+
+        private async Task CacheImages(IEnumerable<Entry> entries)
+        {
+            MD5 md5Hasher = MD5.Create();
+            var images = Client().GetContainerReference("images");
+            var http = new HttpClient();
+
+            await Task.WhenAll(entries.Select(async e =>
+            {
+                var hash = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(e.img));
+                var hashname = System.BitConverter.ToString(hash).Replace("-", "");
+                var blob = images.GetBlockBlobReference(hashname);
+                e.cachedImg = blob.Uri.ToString();
+                if (!(await blob.ExistsAsync()))
+                {
+                    var img = await http.GetAsync(e.img);
+                    await blob.UploadFromStreamAsync(await img.Content.ReadAsStreamAsync());
+                }
+            }));
+
         }
 
 
@@ -115,17 +153,6 @@
         {
             return Client().GetContainerReference("lists");
         }
-
-        public class Ranking : List<Entry>
-        {
-            public string ListName;
-            public string PrettyListName;
-        }
-
-        public class Entry
-        {
-            public string name;
-            public string img;
-        }
+        
     }
 }

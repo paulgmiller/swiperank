@@ -44,6 +44,8 @@
                 {
                     CloudBlockBlob blob = Lists().GetBlockBlobReference(l);
                     var list = JsonConvert.DeserializeObject<IEnumerable<Entry>>(await blob.DownloadTextAsync());
+                    if (list.Any(e => string.IsNullOrWhiteSpace(e.cachedImg)))
+                        return;
                     await CacheImages(list);
                     blob.CreateSnapshot();
                     await blob.UploadTextAsync(JsonConvert.SerializeObject(list));

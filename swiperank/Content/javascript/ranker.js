@@ -77,10 +77,10 @@ function paint() {
   }
   $("#right").text(ranker.candidate.name);
   $('#right').prepend($('<br>'));
-  $('#right').prepend($('<img>',{src:ranker.candidate.img}))
+  $('#right').prepend($('<img>',{src:ranker.candidate.cachedImg || ranker.candidate.img}))
   $("#left").text(ranker.consideration().name + " " + (ranker.doppel()+1) + "/" + ranker.ranking.length);
   $('#left').prepend($('<br>'));
-  $('#left').prepend($('<img>',{src:ranker.consideration().img}))
+  $('#left').prepend($('<img>', { src: ranker.consideration().cachedImg || ranker.consideration().img }))
 }
 
 function finish()

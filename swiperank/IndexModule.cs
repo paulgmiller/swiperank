@@ -37,20 +37,15 @@
                return View["alllists", await AllLists()];
             };
 
-            Get["/cacheimages", runAsync: true] = async (param, token) =>
+            Get["/cacheimages/{list}", runAsync: true] = async (param, token) =>
             {
-                var lists = await AllLists();
-                await Task.WhenAll(lists.Select(async l =>
-                {
-                    CloudBlockBlob blob = Lists().GetBlockBlobReference(l);
-                    var list = JsonConvert.DeserializeObject<IEnumerable<Entry>>(await blob.DownloadTextAsync());
-                    if (list.Any(e => string.IsNullOrWhiteSpace(e.cachedImg)))
-                        return;
-                    await CacheImages(list);
-                    blob.CreateSnapshot();
-                    await blob.UploadTextAsync(JsonConvert.SerializeObject(list));
-                }));
-                return HttpStatusCode.OK;
+                CloudBlockBlob blob = Lists().GetBlockBlobReference(param.list);
+                var list = JsonConvert.DeserializeObject<IEnumerable<Entry>>(await blob.DownloadTextAsync());
+                
+                await CacheImages(list);
+                var newlist = JsonConvert.SerializeObject(list);
+                await blob.UploadTextAsync(newlist);
+                return JsonConvert.SerializeObject(JsonConvert.SerializeObject(list.Select(e => e.cachedImg)));
 
             };
 
@@ -106,6 +101,11 @@
                 if (!await blob.ExistsAsync())
                     return HttpStatusCode.NotFound;
                 return await  blob.DownloadTextAsync();
+            };
+
+            Get["/list", runAsync: true] = async (param, token) =>
+            {
+                return JsonConvert.SerializeObject(await AllLists());
             };
         }
 

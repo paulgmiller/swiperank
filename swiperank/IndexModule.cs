@@ -89,8 +89,6 @@
                     await CacheImages(list);
                     await blob.UploadTextAsync(JsonConvert.SerializeObject(list));
                 }
-
-                await blob.UploadFromStreamAsync(this.Request.Body);
                 return HttpStatusCode.Created;
             };
 
@@ -103,10 +101,49 @@
                 return await  blob.DownloadTextAsync();
             };
 
-            Get["/list", runAsync: true] = async (param, token) =>
+            //better if we take it an reject or return hash url
+            Get["/rename/{list}", runAsync: true] = async (param, token) =>
             {
-                return JsonConvert.SerializeObject(await AllLists());
+                string to = this.Request.Query["to"];
+                if (string.IsNullOrEmpty(to))
+                    return HttpStatusCode.BadRequest;
+                await RenameAll(param.list, to);
+
+                return HttpStatusCode.OK;
             };
+
+
+        }
+
+
+        private async Task RenameAll(string from, string to)
+        {
+            await RenameAsync(Lists(), from, to);
+
+            var rankings = await Rankings().ListBlobsSegmentedAsync(from, null);
+            await Task.WhenAll(rankings.Results.OfType<CloudBlockBlob>().Select(r =>
+            {
+                var newName = r.Name.Replace(from, to);
+                return RenameAsync(Rankings(), r.Name, newName);
+            }));
+        }
+
+        private static async Task RenameAsync(CloudBlobContainer container, string oldName, string newName)
+        {
+            var source = await container.GetBlobReferenceFromServerAsync(oldName);
+            var target = container.GetBlockBlobReference(newName);
+            if (!await source.ExistsAsync())
+                throw new ApplicationException("Rename failed does not exist : " + oldName);
+
+            await target.StartCopyAsync(source.Uri);
+
+            while (target.CopyState.Status == CopyStatus.Pending)
+                await Task.Delay(100);
+
+            if (target.CopyState.Status != CopyStatus.Success)
+                throw new ApplicationException("Rename failed: " + target.CopyState.Status);
+
+            await source.DeleteAsync();
         }
 
         private async Task<IEnumerable<string>> AllLists() //todo switch to async

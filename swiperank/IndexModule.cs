@@ -37,12 +37,12 @@
                return View["alllists", await AllLists()];
             };
 
-            Get["/cacheimages/{list}", runAsync: true] = async (param, token) =>
+            Get["/dedupe/{list}", runAsync: true] = async (param, token) =>
             {
                 CloudBlockBlob blob = Lists().GetBlockBlobReference(param.list);
                 var list = JsonConvert.DeserializeObject<IEnumerable<Entry>>(await blob.DownloadTextAsync());
-                
-                await CacheImages(list);
+
+                list = list.Distinct(new EntryComparer());
                 var newlist = JsonConvert.SerializeObject(list);
                 await blob.UploadTextAsync(newlist);
                 return JsonConvert.SerializeObject(JsonConvert.SerializeObject(list.Select(e => e.cachedImg)));
@@ -86,6 +86,7 @@
                 {
                     var serializer = new JsonSerializer();
                     var list = serializer.Deserialize<IEnumerable<Entry>>(jsonTextReader);
+                    list = list.Distinct(new EntryComparer());
                     await CacheImages(list);
                     await blob.UploadTextAsync(JsonConvert.SerializeObject(list));
                 }
@@ -148,8 +149,10 @@
 
         private async Task<IEnumerable<string>> AllLists() //todo switch to async
         {
-            var all = await Lists().ListBlobsSegmentedAsync(null); //todo figure out what todo when we have 5k + 
-            var names = all.Results.Select(b => b.Uri.PathAndQuery.Split('/').Last());
+            var all = await Lists().ListBlobsSegmentedAsync(null);// "", false, BlobListingDetails.None, null, null, null, null);
+                                                                  //todo figure out what todo when we have 5k + 
+            var names = all.Results.OfType<CloudBlockBlob>().Select(b => b.Name);
+            names = names.Concat(all.Results.OfType<CloudBlobDirectory>().Select(d => d.Prefix));
             //limited black list 
             return names.Where(n => !n.ToLower().Contains("porn")).OrderBy(n => n, StringComparer.OrdinalIgnoreCase);
         }

@@ -15,4 +15,10 @@
         public string img;
         public string cachedImg;
     }
+
+    public class EntryComparer: IEqualityComparer<Entry>
+    {
+       public bool Equals(Entry lhs, Entry rhs) { return lhs.img.Equals(rhs.img); }
+       public int GetHashCode(Entry e) { return e.GetHashCode(); }
+    }
 }

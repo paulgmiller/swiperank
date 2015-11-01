@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="msapplication-tap-highlight" content="no" />
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
-    <title>Ranking of @Model.PrettyListName</title>
+    <title>@Model.TotalRankings Rankings of @Model.PrettyListName</title>
     <link rel="stylesheet" type="text/css" href="/content/css/style.css">
 </head>
 <body>
@@ -16,7 +16,7 @@
 	  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5";
 	  fjs.parentNode.insertBefore(js, fjs);
 	}(document, 'script', 'facebook-jssdk'));</script>
-	<div id = "header">Ranking of @Model.PrettyListName</div>
+	<div id = "header">@Model.TotalRankings Rankings of @Model.PrettyListName</div>
 	<div id = "rerank"><a href="/rank?list=@Model.ListName">Re-rank</a>. 
 					   <a href="/random">Rank a random list</a>.  
 					   <a href="/">All lists</a>.  
@@ -25,8 +25,10 @@
 	</div>						
 	<div id = "all">
 		<ol>
-		@Each
-		<li>@Current.name<br/><img src="@Current.cachedImg" /></li>
+		@Each.OrderedRanking
+		<li>@Current.name<br />
+			Score: @Current.score<br/>
+			<img src="@Current.cachedImg" /></li>
 		@EndEach
 		</ol>
 	</div>

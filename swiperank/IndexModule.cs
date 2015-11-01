@@ -62,8 +62,8 @@
             Get["/ranking/{list}", runAsync: true] = async (param, token) =>
             {
                 var aggregateranking  = await  Aggregate(param.list);
-                //return View["aggregateranking", aggregateranking];
-                return JsonConvert.SerializeObject(aggregateranking);
+                return View["aggregateranking", aggregateranking];
+                //return JsonConvert.SerializeObject(aggregateranking);
             };
 
             Get["/ranking/{list}/{hash}", runAsync: true] = async (param, token) =>

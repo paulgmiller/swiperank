@@ -117,6 +117,7 @@
     <Content Include="packages.config" />
     <Content Include="Views\ranking.sshtml" />
     <Content Include="Views\alllists.sshtml" />
+    <Content Include="Views\aggregateranking.sshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

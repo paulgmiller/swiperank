@@ -1,6 +1,7 @@
 ﻿namespace swiperank
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     public class Ranking : List<Entry>
     {
@@ -14,6 +15,54 @@
         public string name;
         public string img;
         public string cachedImg;
+    }
+
+    public class EntryWithScore : Entry
+    {
+        public int score;
+    }
+
+    public class AggregateRanking 
+    {
+        public string ListName;
+        public string PrettyListName { get { return ListName.Replace("_", " "); } }
+        public int TotalRankings;
+
+        private Dictionary<string, EntryWithScore> ranked = new Dictionary<string, EntryWithScore>();
+
+        public IEnumerable<EntryWithScore> OrderedRanking
+        {
+            get
+            {
+                return ranked.Values.OrderByDescending(e => e.score);
+            }
+        }
+        public void Add(IReadOnlyCollection<Entry> ranking)
+        {
+            ++TotalRankings;
+            var score = ranking.Count;
+            foreach (var rank in ranking)
+            {
+                if (ranked.ContainsKey(rank.img))
+                {
+                    ranked[rank.img].score += score;
+                }
+                else
+                {
+                    ranked.Add(rank.img, new EntryWithScore {
+                        name = rank.name,
+                        img = rank.img,
+                        cachedImg = rank.img,
+                        score = score,
+                    });
+                }
+                --score;
+            }
+        }
+
+
+       
+        
     }
 
     public class EntryComparer: IEqualityComparer<Entry>

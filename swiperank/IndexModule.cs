@@ -44,7 +44,7 @@
 
                 var newlist = list.Distinct(new EntryComparer()).ToList();
                 await blob.UploadTextAsync(JsonConvert.SerializeObject(newlist));
-                return JsonConvert.SerializeObject(JsonConvert.SerializeObject(new { oldcount = list.Count(), newcount = newlist.Count() } ));
+                return JsonConvert.SerializeObject(new { oldcount = list.Count(), newcount = newlist.Count() } );
 
             };
 
@@ -57,6 +57,13 @@
                 this.Request.Body.Seek(0, System.IO.SeekOrigin.Begin);
                 await blob.UploadFromStreamAsync(this.Request.Body);
                 return "ranking/" + relativeUrl;
+            };
+
+            Get["/ranking/{list}", runAsync: true] = async (param, token) =>
+            {
+                var aggregateranking  = await  Aggregate(param.list);
+                //return View["aggregateranking", aggregateranking];
+                return JsonConvert.SerializeObject(aggregateranking);
             };
 
             Get["/ranking/{list}/{hash}", runAsync: true] = async (param, token) =>
@@ -115,6 +122,23 @@
 
         }
 
+        private async Task<AggregateRanking> Aggregate(string list)
+        {
+            var rankingnames = await Rankings().ListBlobsSegmentedAsync(list+"/", null);
+            var rankings = await Task.WhenAll(rankingnames.Results.OfType<CloudBlockBlob>().Select(async r =>
+            {
+                var json = await r.DownloadTextAsync();
+                //need to save and pass back cap/max and seed.
+                return JsonConvert.DeserializeObject<Ranking>(json);
+            }));
+            var agg = new AggregateRanking() { ListName = list };
+            foreach (var r in rankings)
+            {
+                agg.Add(r);
+            }
+            return agg;            
+        }
+
 
         private async Task RenameAll(string from, string to)
         {
@@ -127,7 +151,7 @@
                 return RenameAsync(Rankings(), r.Name, newName);
             }));
         }
-
+        
         private static async Task RenameAsync(CloudBlobContainer container, string oldName, string newName)
         {
             var source = await container.GetBlobReferenceFromServerAsync(oldName);

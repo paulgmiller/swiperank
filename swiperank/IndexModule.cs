@@ -42,10 +42,9 @@
                 CloudBlockBlob blob = Lists().GetBlockBlobReference(param.list);
                 var list = JsonConvert.DeserializeObject<IEnumerable<Entry>>(await blob.DownloadTextAsync());
 
-                list = list.Distinct(new EntryComparer());
-                var newlist = JsonConvert.SerializeObject(list);
-                await blob.UploadTextAsync(newlist);
-                return JsonConvert.SerializeObject(JsonConvert.SerializeObject(list.Select(e => e.cachedImg)));
+                var newlist = list.Distinct(new EntryComparer()).ToList();
+                await blob.UploadTextAsync(JsonConvert.SerializeObject(newlist));
+                return JsonConvert.SerializeObject(JsonConvert.SerializeObject(new { oldcount = list.Count(), newcount = newlist.Count() } ));
 
             };
 

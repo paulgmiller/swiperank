@@ -12,7 +12,7 @@
 		<ul>
 		<li><a href="/random"/>Random!</a></li>
 		@Each
-		<li><a href="/rank?list=@Current" />@Current</li>
+		<li><a href="/rank?list=@Current">@Current</a>  (<a href="/ranking/@Current">results</a>)</li>
 		@EndEach
 		</ul>
 	</div>	

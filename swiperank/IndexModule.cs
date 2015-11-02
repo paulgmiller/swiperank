@@ -175,7 +175,7 @@
             var all = await Lists().ListBlobsSegmentedAsync(null);// "", false, BlobListingDetails.None, null, null, null, null);
                                                                   //todo figure out what todo when we have 5k + 
             var names = all.Results.OfType<CloudBlockBlob>().Select(b => b.Name);
-            names = names.Concat(all.Results.OfType<CloudBlobDirectory>().Select(d => d.Prefix));
+            //names = names.Concat(all.Results.OfType<CloudBlobDirectory>().Select(d => d.Prefix));
             //limited black list 
             return names.Where(n => !n.ToLower().Contains("porn")).OrderBy(n => n, StringComparer.OrdinalIgnoreCase);
         }

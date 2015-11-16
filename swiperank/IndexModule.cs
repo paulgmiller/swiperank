@@ -1,6 +1,7 @@
 ﻿namespace swiperank
 {
     using Nancy;
+    using Nancy.ModelBinding;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
     using System.Security.Cryptography;
@@ -93,31 +94,32 @@
 
             const string key = "ignored:iXmLK5VWa0N0RdqJ4csrl6zDFw5DnFlwrPCbQcK4cqE=";
 
-            Post["/textlist/{name}", runAsync: true] = async (param, token) =>
+            Get["/createlist"] = _ => View["createlist"];
+
+            Post["/createlist", runAsync: true] = async (param, token) =>
             {
                 var http = new HttpClient();
                 var base64 = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(key));
                 http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", base64);
-                using (var sr = new StreamReader(this.Request.Body))
+                var input = this.Bind<NewList>();
+                
+                var tasklist = input.Lines.Select(async line =>  
                 {
-                    var lines = ReadLines(sr);
-                    var tasklist = lines.Select(async line =>  
-                    {
-                        var encoded = "%27" + System.Web.HttpUtility.UrlEncode(line) + "%27";
+                    var encoded = "%27" + System.Web.HttpUtility.UrlEncode(line + " " + input.name) + "%27";
 
-                        var url = string.Format("https://api.datamarket.azure.com/Bing/Search/Image?Query={0}&$format=json", encoded);
-                        var resp = await http.GetAsync(url);
+                    var url = string.Format("https://api.datamarket.azure.com/Bing/Search/Image?Query={0}&$format=json", encoded);
+                    var resp = await http.GetAsync(url);
                         
-                        var respstr = await resp.Content.ReadAsStringAsync();
-                        var respjson = JsonConvert.DeserializeObject<ImageResponse>(respstr);
-                        return new Entry
-                        {
-                            name = line,
-                            img = respjson.d.results[0].mediaurl
-                        };
-                    });
-                    return await Save(await Task.WhenAll(tasklist), param.name);
-                }
+                    var respstr = await resp.Content.ReadAsStringAsync();
+                    var respjson = JsonConvert.DeserializeObject<ImageResponse>(respstr);
+                    return new Entry
+                    {
+                        name = line,
+                        img = respjson.d.results[0].mediaurl
+                    };
+                });
+                return await Save(await Task.WhenAll(tasklist), input.name);
+                
             };
 
             //better if we take it an reject or return hash url
@@ -153,15 +155,6 @@
             await blob.UploadTextAsync(JsonConvert.SerializeObject(list));
             return HttpStatusCode.Created;
 
-        }
-
-        private static IEnumerable<string> ReadLines(TextReader reader)
-        {
-            string line = null;
-            while ((line = reader.ReadLine()) != null)
-            {
-                yield return line;
-            }
         }
 
         private async Task<AggregateRanking> Aggregate(string list)

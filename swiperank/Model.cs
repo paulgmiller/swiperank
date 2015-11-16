@@ -1,5 +1,6 @@
 ﻿namespace swiperank
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -35,6 +36,13 @@
     public class ImageResult
     {
         public string mediaurl;
+    }
+
+    public class NewList
+    {
+        public string name;
+        public string content;
+        public IEnumerable<string> Lines { get { return content.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries); } }
     }
 
 

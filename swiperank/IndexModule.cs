@@ -82,21 +82,42 @@
 
             Post["/list/{list}", runAsync: true] = async (param, token) =>
             {
-                CloudBlockBlob blob = Lists().GetBlockBlobReference(param.list);
-                
-                if (await blob.ExistsAsync())
-                    return HttpStatusCode.Conflict;
-                //could cache images here
                 using (var sr = new StreamReader(this.Request.Body))
                 using (var jsonTextReader = new JsonTextReader(sr))
                 {
                     var serializer = new JsonSerializer();
                     var list = serializer.Deserialize<IEnumerable<Entry>>(jsonTextReader);
-                    list = list.Distinct(new EntryComparer());
-                    await CacheImages(list);
-                    await blob.UploadTextAsync(JsonConvert.SerializeObject(list));
+                    return await Save(list, param.name);
                 }
-                return HttpStatusCode.Created;
+            };
+
+            const string key = "ignored:iXmLK5VWa0N0RdqJ4csrl6zDFw5DnFlwrPCbQcK4cqE=";
+
+            Post["/textlist/{name}", runAsync: true] = async (param, token) =>
+            {
+                var http = new HttpClient();
+                var base64 = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(key));
+                http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", base64);
+                using (var sr = new StreamReader(this.Request.Body))
+                {
+                    var lines = ReadLines(sr);
+                    var tasklist = lines.Select(async line =>  
+                    {
+                        var encoded = "%27" + System.Web.HttpUtility.UrlEncode(line) + "%27";
+
+                        var url = string.Format("https://api.datamarket.azure.com/Bing/Search/Image?Query={0}&$format=json", encoded);
+                        var resp = await http.GetAsync(url);
+                        
+                        var respstr = await resp.Content.ReadAsStringAsync();
+                        var respjson = JsonConvert.DeserializeObject<ImageResponse>(respstr);
+                        return new Entry
+                        {
+                            name = line,
+                            img = respjson.d.results[0].mediaurl
+                        };
+                    });
+                    return await Save(await Task.WhenAll(tasklist), param.name);
+                }
             };
 
             //better if we take it an reject or return hash url
@@ -118,8 +139,29 @@
 
                 return HttpStatusCode.OK;
             };
+        }
 
+        private async Task<HttpStatusCode> Save(IEnumerable<Entry> list, string name)
+        {
+            CloudBlockBlob blob = Lists().GetBlockBlobReference(name);
 
+            if (await blob.ExistsAsync())
+                return HttpStatusCode.Conflict;
+
+            list = list.Distinct(new EntryComparer());
+            list = await CacheImages(list);
+            await blob.UploadTextAsync(JsonConvert.SerializeObject(list));
+            return HttpStatusCode.Created;
+
+        }
+
+        private static IEnumerable<string> ReadLines(TextReader reader)
+        {
+            string line = null;
+            while ((line = reader.ReadLine()) != null)
+            {
+                yield return line;
+            }
         }
 
         private async Task<AggregateRanking> Aggregate(string list)
@@ -180,13 +222,13 @@
             return names.Where(n => !n.ToLower().Contains("porn")).OrderBy(n => n, StringComparer.OrdinalIgnoreCase);
         }
 
-        private async Task CacheImages(IEnumerable<Entry> entries)
+        private async Task<IEnumerable<Entry>> CacheImages(IEnumerable<Entry> entries)
         {
             MD5 md5Hasher = MD5.Create();
             var images = Client().GetContainerReference("images");
             var http = new HttpClient();
 
-            await Task.WhenAll(entries.Select(async e =>
+            var tasks = entries.Select(async e =>
             {
                 var hash = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(e.img));
                 var hashname = System.BitConverter.ToString(hash).Replace("-", "");
@@ -194,10 +236,21 @@
                 e.cachedImg = blob.Uri.ToString();
                 if (!(await blob.ExistsAsync()))
                 {
-                    var img = await http.GetAsync(e.img);
-                    await blob.UploadFromStreamAsync(await img.Content.ReadAsStreamAsync());
+                    try
+                    {
+                        var img = await http.GetAsync(e.img);
+                        await blob.UploadFromStreamAsync(await img.Content.ReadAsStreamAsync());
+                    }
+                    catch (Exception)
+                    {
+                        return null;
+                    }
                 }
-            }));
+                return e;
+
+            });
+            
+            return (await Task.WhenAll(tasks)).Where(e => e != null);
 
         }
 

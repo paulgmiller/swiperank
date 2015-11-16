@@ -22,6 +22,22 @@
         public int score;
     }
 
+    public class ImageResponse
+    {
+        public ImageSchema d;
+    }
+
+    public class ImageSchema
+    {
+        public List<ImageResult> results;
+    }
+
+    public class ImageResult
+    {
+        public string mediaurl;
+    }
+
+
     public class AggregateRanking 
     {
         public string ListName;

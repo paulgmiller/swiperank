@@ -22,6 +22,5 @@ Online ranking using side by comparisons and swiping.
 * MLB/NHL Teams, fix nba
 * NFL/college football cheerleaders
 * FIX NBA
-* Sci FI and other books
 
 

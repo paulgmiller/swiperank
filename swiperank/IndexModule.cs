@@ -88,7 +88,7 @@
                 {
                     var serializer = new JsonSerializer();
                     var list = serializer.Deserialize<IEnumerable<Entry>>(jsonTextReader);
-                    return await Save(list, param.name);
+                    return await Save(list, param.list);
                 }
             };
 
@@ -118,7 +118,12 @@
                         img = respjson.d.results[0].mediaurl
                     };
                 });
-                return await Save(await Task.WhenAll(tasklist), input.name);
+                var saved = await Save(await Task.WhenAll(tasklist), input.name);
+                if (saved == HttpStatusCode.Created)
+                {
+                    return Response.AsRedirect("/Rank?list="+ System.Web.HttpUtility.UrlEncode(input.name));
+                }
+                return saved;
                 
             };
 

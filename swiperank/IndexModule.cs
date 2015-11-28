@@ -20,9 +20,14 @@
         {
             Get["/random", runAsync: true] = async (param, token) =>
             {
-                var all = (await AllLists()).ToList();
                 var r = new Random();
+                var all = (await GetLists()).Lists.ToList();
                 var pick = all[r.Next(0, all.Count())];
+                /*while (pick.isCollection)
+                {
+                    all = (await GetLists(pick.name)).ToList();
+                    pick = all[r.Next(0, all.Count())];
+                }*/
                 return Response.AsRedirect("/rank?list=" + pick);
             };
 
@@ -35,7 +40,8 @@
 
             Get["/", runAsync: true] = Get["/alllists", runAsync: true] = async (param, token) =>
             {
-               return View["alllists", await AllLists()];
+                var collection = this.Request.Query["collection"] ?? ""; //if nothing empty string is the root
+                return View["alllists", await GetLists(collection)];
             };
 
             Get["/dedupe/{list}", runAsync: true] = async (param, token) =>
@@ -45,7 +51,7 @@
 
                 var newlist = list.Distinct(new EntryComparer()).ToList();
                 await blob.UploadTextAsync(JsonConvert.SerializeObject(newlist));
-                return JsonConvert.SerializeObject(new { oldcount = list.Count(), newcount = newlist.Count() } );
+                return JsonConvert.SerializeObject(new { oldcount = list.Count(), newcount = newlist.Count() });
 
             };
 
@@ -62,7 +68,7 @@
 
             Get["/ranking/{list}", runAsync: true] = async (param, token) =>
             {
-                var aggregateranking  = await  Aggregate(param.list);
+                var aggregateranking = await Aggregate(param.list);
                 return View["aggregateranking", aggregateranking];
                 //return JsonConvert.SerializeObject(aggregateranking);
             };
@@ -73,9 +79,9 @@
                 if (!await blob.ExistsAsync())
                     return HttpStatusCode.NotFound;
 
-                var json =  await blob.DownloadTextAsync();
+                var json = await blob.DownloadTextAsync();
                 //need to save and pass back cap/max and seed.
-                var ranking = JsonConvert.DeserializeObject<Ranking> (json);
+                var ranking = JsonConvert.DeserializeObject<Ranking>(json);
                 ranking.ListName = param.list;
                 ranking.Hash = param.hash;
                 return View["ranking", ranking];
@@ -102,14 +108,14 @@
                 var base64 = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(key));
                 http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", base64);
                 var input = this.Bind<NewList>();
-                
-                var tasklist = input.Lines.Select(async line =>  
+
+                var tasklist = input.Lines.Select(async line =>
                 {
                     var encoded = "%27" + System.Web.HttpUtility.UrlEncode(line + " " + input.name) + "%27";
 
                     var url = string.Format("https://api.datamarket.azure.com/Bing/Search/Image?Query={0}&$format=json", encoded);
                     var resp = await http.GetAsync(url);
-                        
+
                     var respstr = await resp.Content.ReadAsStringAsync();
                     var respjson = JsonConvert.DeserializeObject<ImageResponse>(respstr);
                     return new Entry
@@ -121,19 +127,19 @@
                 var saved = await Save(await Task.WhenAll(tasklist), input.name);
                 if (saved == HttpStatusCode.Created)
                 {
-                    return Response.AsRedirect("/Rank?list="+ System.Web.HttpUtility.UrlEncode(input.name));
+                    return Response.AsRedirect("/Rank?list=" + System.Web.HttpUtility.UrlEncode(input.name));
                 }
                 return saved;
-                
+
             };
 
             //better if we take it an reject or return hash url
-            Get["/list/{list}", runAsync: true] = async (param, token) =>
+            Get["/list/{list*}", runAsync: true] = async (param, token) =>
             {
                 CloudBlockBlob blob = Lists().GetBlockBlobReference(param.list);
                 if (!await blob.ExistsAsync())
                     return HttpStatusCode.NotFound;
-                return await  blob.DownloadTextAsync();
+                return await blob.DownloadTextAsync();
             };
 
             //better if we take it an reject or return hash url
@@ -159,12 +165,11 @@
             list = await CacheImages(list);
             await blob.UploadTextAsync(JsonConvert.SerializeObject(list));
             return HttpStatusCode.Created;
-
         }
 
         private async Task<AggregateRanking> Aggregate(string list)
         {
-            var rankingnames = await Rankings().ListBlobsSegmentedAsync(list+"/", null);
+            var rankingnames = await Rankings().ListBlobsSegmentedAsync(list + "/", null);
             var rankings = await Task.WhenAll(rankingnames.Results.OfType<CloudBlockBlob>().Select(async r =>
             {
                 var json = await r.DownloadTextAsync();
@@ -176,7 +181,7 @@
             {
                 agg.Add(r);
             }
-            return agg;            
+            return agg;
         }
 
 
@@ -191,7 +196,7 @@
                 return RenameAsync(Rankings(), r.Name, newName);
             }));
         }
-        
+
         private static async Task RenameAsync(CloudBlobContainer container, string oldName, string newName)
         {
             var source = await container.GetBlobReferenceFromServerAsync(oldName);
@@ -210,14 +215,27 @@
             await source.DeleteAsync();
         }
 
-        private async Task<IEnumerable<string>> AllLists() //todo switch to async
+        public class Listing 
         {
-            var all = await Lists().ListBlobsSegmentedAsync(null);// "", false, BlobListingDetails.None, null, null, null, null);
-                                                                  //todo figure out what todo when we have 5k + 
-            var names = all.Results.OfType<CloudBlockBlob>().Select(b => b.Name);
-            //names = names.Concat(all.Results.OfType<CloudBlobDirectory>().Select(d => d.Prefix));
-            //limited black list 
-            return names.Where(n => !n.ToLower().Contains("porn")).OrderBy(n => n, StringComparer.OrdinalIgnoreCase);
+            public IEnumerable<string> Lists;
+            public IEnumerable<string> Collections;
+        }
+
+
+        private async Task<Listing> GetLists(string prefix = "") //todo switch to async
+        {
+            var all = await Lists().ListBlobsSegmentedAsync(prefix,null);// "", false, BlobListingDetails.None, null, null, null, null);
+            
+            return new Listing()
+            {
+                Lists = FilterAndSort(all.Results.OfType<CloudBlockBlob>().Select(b => b.Name)),
+                Collections = FilterAndSort(all.Results.OfType<CloudBlobDirectory>().Select(d => d.Prefix))
+            };
+        }
+
+        private IEnumerable<string> FilterAndSort(IEnumerable<string> list)
+        {
+            return list.Where(l => !l.ToLower().Contains("porn")).OrderBy(n => n, StringComparer.OrdinalIgnoreCase);
         }
 
         private async Task<IEnumerable<Entry>> CacheImages(IEnumerable<Entry> entries)

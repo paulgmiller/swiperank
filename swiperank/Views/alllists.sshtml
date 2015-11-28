@@ -11,8 +11,15 @@
 	<div id = "all">
 		<ul>
 		<li><a href="/random"/>Random!</a></li>
-		@Each
-		<li><a href="/rank?list=@Current">@Current</a>  (<a href="/ranking/@Current">results</a>)</li>
+		@Each.Collections
+		<li>
+		<a href="/alllists?collection=@Current">@Current</a>
+		</li>
+		@EndEach
+		@Each.Lists
+		<li>
+		<a href="/rank?list=@Current">@Current</a>  (<a href="/ranking/@Current">results</a>)
+		</li>
 		@EndEach
 		</ul>
 	</div>	

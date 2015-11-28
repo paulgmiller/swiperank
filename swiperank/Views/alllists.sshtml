@@ -18,7 +18,7 @@
 		@EndEach
 		@Each.Lists
 		<li>
-		<a href="/rank?list=@Current">@Current</a>  (<a href="/ranking/@Current">results</a>)
+		<a href="/rank?list=@Current">@Current</a>  (<a href="/aggregateranking/@Current">results</a>)
 		</li>
 		@EndEach
 		</ul>

@@ -44,7 +44,7 @@
                 return View["alllists", await GetLists(collection)];
             };
 
-            Get["/dedupe/{list}", runAsync: true] = async (param, token) =>
+            Get["/dedupe/{list*}", runAsync: true] = async (param, token) =>
             {
                 CloudBlockBlob blob = Lists().GetBlockBlobReference(param.list);
                 var list = JsonConvert.DeserializeObject<IEnumerable<Entry>>(await blob.DownloadTextAsync());
@@ -66,14 +66,14 @@
                 return "ranking/" + relativeUrl;
             };
 
-            Get["/ranking/{list}", runAsync: true] = async (param, token) =>
+            Get["/aggregateranking/{list*}", runAsync: true] = async (param, token) =>
             {
                 var aggregateranking = await Aggregate(param.list);
                 return View["aggregateranking", aggregateranking];
                 //return JsonConvert.SerializeObject(aggregateranking);
             };
 
-            Get["/ranking/{list}/{hash}", runAsync: true] = async (param, token) =>
+            Get["/ranking/{list*}/{hash}", runAsync: true] = async (param, token) =>
             {
                 CloudBlockBlob blob = Rankings().GetBlockBlobReference(param.list + "/" + param.hash);
                 if (!await blob.ExistsAsync())
@@ -143,7 +143,7 @@
             };
 
             //better if we take it an reject or return hash url
-            Get["/rename/{list}", runAsync: true] = async (param, token) =>
+            Get["/rename/{list*}", runAsync: true] = async (param, token) =>
             {
                 string to = this.Request.Query["to"];
                 if (string.IsNullOrEmpty(to))
@@ -189,7 +189,7 @@
         {
             await RenameAsync(Lists(), from, to);
 
-            var rankings = await Rankings().ListBlobsSegmentedAsync(from, null);
+            var rankings = await Rankings().ListBlobsSegmentedAsync(from + "/", null);
             await Task.WhenAll(rankings.Results.OfType<CloudBlockBlob>().Select(r =>
             {
                 var newName = r.Name.Replace(from, to);
@@ -199,7 +199,7 @@
 
         private static async Task RenameAsync(CloudBlobContainer container, string oldName, string newName)
         {
-            var source = await container.GetBlobReferenceFromServerAsync(oldName);
+            var source = container.GetBlockBlobReference(oldName);
             var target = container.GetBlockBlobReference(newName);
             if (!await source.ExistsAsync())
                 throw new ApplicationException("Rename failed does not exist : " + oldName);

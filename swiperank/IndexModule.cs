@@ -73,17 +73,21 @@
                 //return JsonConvert.SerializeObject(aggregateranking);
             };
 
-            Get["/ranking/{list*}/{hash}", runAsync: true] = async (param, token) =>
+            Get["/ranking/{list*}", runAsync: true] = async (param, token) =>
             {
-                CloudBlockBlob blob = Rankings().GetBlockBlobReference(param.list + "/" + param.hash);
+                //greedy doesn't let us pull out the hash so do it manually
+                string cobminedlistandhash = param.list;
+                CloudBlockBlob blob = Rankings().GetBlockBlobReference(cobminedlistandhash);
                 if (!await blob.ExistsAsync())
                     return HttpStatusCode.NotFound;
 
                 var json = await blob.DownloadTextAsync();
                 //need to save and pass back cap/max and seed.
                 var ranking = JsonConvert.DeserializeObject<Ranking>(json);
-                ranking.ListName = param.list;
-                ranking.Hash = param.hash;
+                
+                int sep = cobminedlistandhash.LastIndexOf('/');
+                ranking.ListName = cobminedlistandhash.Substring(0, sep);
+                ranking.Hash = cobminedlistandhash.Substring(sep+1); 
                 return View["ranking", ranking];
             };
 
@@ -133,7 +137,6 @@
 
             };
 
-            //better if we take it an reject or return hash url
             Get["/list/{list*}", runAsync: true] = async (param, token) =>
             {
                 CloudBlockBlob blob = Lists().GetBlockBlobReference(param.list);
@@ -141,6 +144,15 @@
                     return HttpStatusCode.NotFound;
                 return await blob.DownloadTextAsync();
             };
+
+            /*Delete["/list/{list*}", runAsync: true] = async (param, token) =>
+            {
+                CloudBlockBlob blob = Lists().GetBlockBlobReference(param.list);
+                if (!await blob.ExistsAsync())
+                    return HttpStatusCode.NotFound;
+                await blob.DeleteAsync();
+                return HttpStatusCode.OK;
+            };*/
 
             //better if we take it an reject or return hash url
             Get["/rename/{list*}", runAsync: true] = async (param, token) =>

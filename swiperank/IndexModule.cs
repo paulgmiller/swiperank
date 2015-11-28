@@ -55,7 +55,7 @@
 
             };
 
-            Post["/ranking/{list}", runAsync: true] = async (param, token) =>
+            Post["/ranking/{list*}", runAsync: true] = async (param, token) =>
             {
                 MD5 md5Hasher = MD5.Create();
                 var hash = md5Hasher.ComputeHash(this.Request.Body);
@@ -91,7 +91,7 @@
                 return View["ranking", ranking];
             };
 
-            Post["/list/{list}", runAsync: true] = async (param, token) =>
+            Post["/list/{list*}", runAsync: true] = async (param, token) =>
             {
                 using (var sr = new StreamReader(this.Request.Body))
                 using (var jsonTextReader = new JsonTextReader(sr))

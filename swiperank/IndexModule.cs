@@ -115,9 +115,9 @@
 
                 var tasklist = input.Lines.Select(async line =>
                 {
-                    var encoded = "%27" + System.Web.HttpUtility.UrlEncode(line + " " + input.name) + "%27";
+                    var encoded = "%27" + System.Web.HttpUtility.UrlEncode(line + " " + input.searchhelper) + "%27";
 
-                    var url = string.Format("https://api.datamarket.azure.com/Bing/Search/Image?Query={0}&$format=json", encoded);
+                    var url = string.Format("https://api.datamarket.azure.com/Bing/Search/Image?Query={0}&$format=json&Adult=%27Moderate%27", encoded);
                     var resp = await http.GetAsync(url);
 
                     var respstr = await resp.Content.ReadAsStringAsync();

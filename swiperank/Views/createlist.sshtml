@@ -11,6 +11,9 @@
 	Name:<br/>
 	<input type="text" name="name" value="" maxlength="100" >
 	<br />
+	Search help text:<br/>
+	<input type="text" name="searchhelper" value="" maxlength="100" >
+	<br />
 	Content:<br />
 	<textarea name="content" cols="200" rows="50">
 	</textarea>

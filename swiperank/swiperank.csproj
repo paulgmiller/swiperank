@@ -98,7 +98,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\css\AllLists.css" />
     <Content Include="Content\css\style.css" />
     <Content Include="Content\javascript\ranker.js" />
     <Content Include="Web.config" />

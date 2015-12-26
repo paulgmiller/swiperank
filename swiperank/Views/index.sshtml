@@ -41,12 +41,12 @@
 		   <div id="listname" class="text-center"></div>
 		   <div id="header" class="text-center">swipe to the better side</div>
 		   <div class="row">
-			  <div class="col-md-6" id="left"><img id="leftimg" class="img-responsive" src=""/></div>
-			  <div class="col-md-6" id="right"><img id="rightimg" class="img-responsive" src=""/></div>
+			  <div class="col-xs-6" id="left"><img id="leftimg" class="img-responsive" src=""/></div>
+			  <div class="col-xs-6" id="right"><img id="rightimg" class="img-responsive" src=""/></div>
 		   </div>
 		    <div class="row">
-			  <div class="col-md-6 text-center" id="lefttxt"></div>
-			  <div class="col-md-6 text-center" id="righttxt"></div>
+			  <div class="col-xs-6 text-center" id="lefttxt"></div>
+			  <div class="col-xs-6 text-center" id="righttxt"></div>
 		   </div>
 		</div>
 	<br />

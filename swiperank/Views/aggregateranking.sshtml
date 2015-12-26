@@ -12,10 +12,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-	<!-- have to pad body for fixed navbar --> 
+    <div class="container-fluid">
+
+    <!-- have to pad body for fixed navbar --> 
 	<style>body { padding-top: 60px; }</style>
 	<nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -36,14 +37,13 @@
                 <li><a href="/createlist">Create</a></li>
             </ul>
             </div><!-- /.navbar-collapse -->
-        </div><!-- /.container-fluid -->
     </nav>
 	<h2>@Model.TotalRankings Rankings of @Model.PrettyListName</h2>
 	<ol>
 	@Each.OrderedRanking
 		<li>@Current.name<br />
 			Score: @Current.score<br/>
-			<img src="@Current.cachedImg" />
+			<img class="img-responsive" src="@Current.cachedImg" />
 		</li>
 	@EndEach
 	</ol>
@@ -62,6 +62,6 @@
 	<div class="fb-share-button" 
 							data-href="http://swiperank.com/ranking/@Model.ListName/@Model.Hash" 
 							data-layout="button"></div>
-	
+    </div><!-- /.container-fluid -->
 </body>
 </html>

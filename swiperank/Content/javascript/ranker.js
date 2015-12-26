@@ -75,12 +75,10 @@ function paint() {
      finish();
      return;
   }
-  $("#right").text(ranker.candidate.name);
-  $('#right').prepend($('<br>'));
-  $('#right').prepend($('<img>',{src:ranker.candidate.cachedImg || ranker.candidate.img}))
-  $("#left").text(ranker.consideration().name + " " + (ranker.doppel()+1) + "/" + ranker.ranking.length);
-  $('#left').prepend($('<br>'));
-  $('#left').prepend($('<img>', { src: ranker.consideration().cachedImg || ranker.consideration().img }))
+  $("#righttxt").text(ranker.candidate.name);
+  $('#rightimg').attr("src",ranker.candidate.cachedImg || ranker.candidate.img);
+  $("#lefttxt").text(ranker.consideration().name + " " + (ranker.doppel()+1) + "/" + ranker.ranking.length);
+  $('#leftimg').attr("src", ranker.consideration().cachedImg || ranker.consideration().img);
 }
 
 function finish()
@@ -113,10 +111,6 @@ $("#all").on("swiperight", function(ev) {
 
 $("#done").click(function () {
     finish();
-});
-
-$("#goback").click(function () {
-    window.location = "http://" + url.host()
 });
 
 })});

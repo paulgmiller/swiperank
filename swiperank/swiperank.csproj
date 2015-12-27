@@ -99,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\css\style.css" />
+    <Content Include="Content\javascript\jquery.mobile.1.3.2.js" />
     <Content Include="Content\javascript\ranker.js" />
     <Content Include="Web.config" />
   </ItemGroup>

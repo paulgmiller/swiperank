@@ -52,10 +52,10 @@
 			  <div class="col-xs-6 text-center" id="righttxt"></div>
 		   </div>
 		</div>
-	<br />
-	<div class="text-center">
-		<a class="btn btn-default btn-lg" href="#" role="button" id="done">I'm done</a>
-	</div>
+		<br />
+		<div class="text-center">
+			<a class="btn btn-default btn-lg" href="#" role="button" id="done">I'm done</a>
+		</div>
 	</div><!-- /.container-fluid -->
 </body>
 </html>

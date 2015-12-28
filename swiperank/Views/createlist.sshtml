@@ -5,20 +5,28 @@
     <meta name="msapplication-tap-highlight" content="no" />
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
     <title>Create new list</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>    
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 </head>
 <body>
+   <div class="container-fluid">
 	<form action="/createlist" method="POST">
-	Name:<br/>
-	<input type="text" name="name" value="" maxlength="100" >
-	<br />
-	Search help text:<br/>
-	<input type="text" name="searchhelper" value="" maxlength="100" >
-	<br />
-	Content:<br />
-	<textarea name="content" cols="200" rows="50">
-	</textarea>
-	<br />
-	<input type="submit" />
+	<div class="form-group">
+		<label for="name">Name</label>
+		<input type="text" class="form-control" name="name" id="name" />
+	</div>
+	<div class="form-group">
+		<label for="searchhelper">Search help text</label>
+		<input type="text" class="form-control" name="searchhelper" id="searchhelper"/>
+	</div>
+	<div class="form-group">
+		<label for="content">Content</label>
+		<textarea class="form-control" name="content" id="content" rows="32"></textarea>
+	</div>
+	<button type="submit" class="btn btn-default">Submit</button>
 	</form>
+	</div>
 </body>
 </html>

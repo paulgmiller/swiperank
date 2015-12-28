@@ -4,16 +4,14 @@ Rank All the things!
 Online ranking using side by comparisons and swiping.
 
 ##Todo
-
-* Force all images to same ratio or leave whitespace or go back to hardcoding height. 
-* Max image width
 * move out azure connection strings.
-* css theme. (jquery mobile?)
-* list pubishing form
-* auto image search for form.
-* links back to content.
-* advertising (raepplication, about page)
-* Amazon referral (swiran-20)
+* Force all images to same ratio or leave whitespace or go back to hardcoding height. 
+* remove padding
+* pick images on second part of create list.
+* better share buttons http://blog.himpfen.com/social-sharing-buttons-bootstrap-font-awesome/
+* links back to content or amazon refferalswiran-20)
+* advertising (raepplication, about page, more cotnent on rank page.)
+
 
 ##To Scrape.
 * Oscar red carpet

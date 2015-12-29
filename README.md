@@ -7,7 +7,7 @@ Online ranking using side by comparisons and swiping.
 
 * Force all images to same ratio or leave whitespace or go back to hardcoding height. 
 * Max image width
-* move out azure connection strings.
+* move out azure connection strings. (https://azure.microsoft.com/en-us/documentation/articles/storage-configure-connection-string/)
 * css theme. (jquery mobile?)
 * list pubishing form
 * auto image search for form.

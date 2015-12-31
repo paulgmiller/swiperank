@@ -113,19 +113,38 @@
                 http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", base64);
                 var input = this.Bind<NewList>();
 
-                var tasklist = input.Lines.Select(async line =>
+                var tasklist = input.Lines.Select(async line => 
                 {
                     var encoded = "%27" + System.Web.HttpUtility.UrlEncode(line + " " + input.searchhelper) + "%27";
 
-                    var url = string.Format("https://api.datamarket.azure.com/Bing/Search/Image?Query={0}&$format=json&Adult=%27Moderate%27", encoded);
+                    var url = string.Format("https://api.datamarket.azure.com/Bing/Search/Image?Query={0}&$format=json&Adult=%27Off%27", encoded);
                     var resp = await http.GetAsync(url);
 
                     var respstr = await resp.Content.ReadAsStringAsync();
                     var respjson = JsonConvert.DeserializeObject<ImageResponse>(respstr);
+
+                    var image = respjson.d.results.FirstOrDefault(img =>
+                    {
+                        var req = new HttpRequestMessage(HttpMethod.Head, new Uri(img.mediaurl));
+                        try
+                        {
+                            return http.SendAsync(req).Result.IsSuccessStatusCode;
+                        }
+                        catch (Exception)
+                        {
+                            return false;
+                        }
+                    });
+
+                    if (image == null)
+                    {
+                        throw new Exception("no results for " + line);
+                    }
+
                     return new Entry
                     {
                         name = line,
-                        img = respjson.d.results[0].mediaurl
+                        img = image.mediaurl
                     };
                 });
                 var saved = await Save(await Task.WhenAll(tasklist), input.name);
@@ -136,6 +155,8 @@
                 return saved;
 
             };
+
+
 
             Get["/list/{list*}", runAsync: true] = async (param, token) =>
             {

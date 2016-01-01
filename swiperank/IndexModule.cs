@@ -22,13 +22,13 @@
             {
                 var r = new Random();
                 var listing = await GetLists();
-                var index = r.Next(0, listing.Lists.Count()+listing.Collections.Count())
+                var index = r.Next(0, listing.Lists.Count() + listing.Collections.Count());
                 while (index >= listing.Lists.Count())
                 {
-                    listing = await GetLists(listing.Collections.name);
-                    index = r.Next(0, listing.Lists.Count()+listing.Collections.Count())
+                    listing = await GetLists(listing.Collections[index - listing.Lists.Count()]);
+                    index = r.Next(0, listing.Lists.Count() + listing.Collections.Count());
                 }
-                return Response.AsRedirect("/rank?list=" + piclisting.Lists[index].name);
+                return Response.AsRedirect("/rank?list=" + listing.Lists[index]);
             };
 
             Get["/rank"] = parameters =>
@@ -250,8 +250,8 @@
 
         public class Listing 
         {
-            public IEnumerable<string> Lists;
-            public IEnumerable<string> Collections;
+            public List<string> Lists;
+            public List<string> Collections;
         }
 
 
@@ -266,9 +266,9 @@
             };
         }
 
-        private IEnumerable<string> FilterAndSort(IEnumerable<string> list)
+        private List<string> FilterAndSort(IEnumerable<string> list)
         {
-            return list.Where(l => !l.ToLower().Contains("porn")).OrderBy(n => n, StringComparer.OrdinalIgnoreCase);
+            return list.Where(l => !l.ToLower().Contains("porn")).OrderBy(n => n, StringComparer.OrdinalIgnoreCase).ToList();
         }
 
         private async Task<IEnumerable<Entry>> CacheImages(IEnumerable<Entry> entries)

@@ -4,16 +4,13 @@ Rank All the things!
 Online ranking using side by comparisons and swiping.
 
 ##Todo
-
+* move out azure connection strings.  (https://azure.microsoft.com/en-us/documentation/articles/storage-configure-connection-string/)
 * Force all images to same ratio or leave whitespace or go back to hardcoding height. 
-* Max image width
-* move out azure connection strings.
-* css theme. (jquery mobile?)
-* list pubishing form
-* auto image search for form.
-* links back to content.
-* advertising (raepplication, about page)
-* Amazon referral (swiran-20)
+* remove padding
+* pick images on second part of create list.
+* better share buttons http://blog.himpfen.com/social-sharing-buttons-bootstrap-font-awesome/
+* links back to content or amazon refferalswiran-20)
+* advertising (raepplication, about page, more cotnent on rank page.)
 
 ##To Scrape.
 * Oscar red carpet

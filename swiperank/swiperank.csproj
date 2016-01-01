@@ -108,11 +108,7 @@
     <Compile Include="IndexModule.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\index.sshtml">
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="Views\rank.sshtml" />
     <Content Include="Service References\Application Insights\ConnectedService.json" />
     <Content Include="packages.config" />
     <Content Include="Views\ranking.sshtml" />

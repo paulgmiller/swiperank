@@ -21,21 +21,21 @@
             Get["/random", runAsync: true] = async (param, token) =>
             {
                 var r = new Random();
-                var all = (await GetLists()).Lists.ToList();
-                var pick = all[r.Next(0, all.Count())];
-                /*while (pick.isCollection)
+                var listing = await GetLists();
+                var index = r.Next(0, listing.Lists.Count() + listing.Collections.Count());
+                while (index >= listing.Lists.Count())
                 {
-                    all = (await GetLists(pick.name)).ToList();
-                    pick = all[r.Next(0, all.Count())];
-                }*/
-                return Response.AsRedirect("/rank?list=" + pick);
+                    listing = await GetLists(listing.Collections[index - listing.Lists.Count()]);
+                    index = r.Next(0, listing.Lists.Count() + listing.Collections.Count());
+                }
+                return Response.AsRedirect("/rank?list=" + listing.Lists[index]);
             };
 
             Get["/rank"] = parameters =>
             {
                 if (string.IsNullOrEmpty(this.Request.Query["list"]))
                     return Response.AsRedirect("/random");
-                return View["index"];
+                return View["rank"];
             };
 
             Get["/", runAsync: true] = Get["/alllists", runAsync: true] = async (param, token) =>
@@ -250,8 +250,8 @@
 
         public class Listing 
         {
-            public IEnumerable<string> Lists;
-            public IEnumerable<string> Collections;
+            public List<string> Lists;
+            public List<string> Collections;
         }
 
 
@@ -266,9 +266,9 @@
             };
         }
 
-        private IEnumerable<string> FilterAndSort(IEnumerable<string> list)
+        private List<string> FilterAndSort(IEnumerable<string> list)
         {
-            return list.Where(l => !l.ToLower().Contains("porn")).OrderBy(n => n, StringComparer.OrdinalIgnoreCase);
+            return list.Where(l => !l.ToLower().Contains("porn")).OrderBy(n => n, StringComparer.OrdinalIgnoreCase).ToList();
         }
 
         private async Task<IEnumerable<Entry>> CacheImages(IEnumerable<Entry> entries)

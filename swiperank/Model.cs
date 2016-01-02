@@ -44,6 +44,7 @@
         public string searchhelper;
         public string content;
         public IEnumerable<string> Lines { get { return content.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries); } }
+        public string safesearch;
     }
 
 

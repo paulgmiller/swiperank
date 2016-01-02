@@ -47,10 +47,10 @@
 		<br />
 		<label for="safesearch">Safesearch</label>
 		<select class="form-inline" name="safesearch" id="safesearch">
-		<option>Moderate</option>
-		<option>Strict</option>
-		<option>Off</option>
-	</select>
+			<option>Moderate</option>
+			<option>Strict</option>
+			<option>Off</option>
+		</select>
 	</div>
 	<button type="submit" class="btn btn-default">Submit</button>
 	</form>

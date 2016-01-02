@@ -38,6 +38,13 @@
                 return View["rank"];
             };
 
+            Get["/rank"] = parameters =>
+            {
+                if (string.IsNullOrEmpty(this.Request.Query["list"]))
+                    return Response.AsRedirect("/random");
+                return View["rank"];
+            };
+
             Get["/", runAsync: true] = Get["/alllists", runAsync: true] = async (param, token) =>
             {
                 var collection = this.Request.Query["collection"] ?? ""; //if nothing empty string is the root
@@ -103,7 +110,7 @@
             };
 
             const string key = "ignored:iXmLK5VWa0N0RdqJ4csrl6zDFw5DnFlwrPCbQcK4cqE=";
-
+            const string imgsearchurl = "https://api.datamarket.azure.com/Bing/Search/Image?Query=%27{0}%27&$format=json&Adult=%27{1}%27";
             Get["/createlist"] = _ => View["createlist"];
 
             Post["/createlist", runAsync: true] = async (param, token) =>
@@ -115,9 +122,9 @@
 
                 var tasklist = input.Lines.Select(async line => 
                 {
-                    var encoded = "%27" + System.Web.HttpUtility.UrlEncode(line + " " + input.searchhelper) + "%27";
+                    var encoded = System.Web.HttpUtility.UrlEncode(line + " " + input.searchhelper);
 
-                    var url = string.Format("https://api.datamarket.azure.com/Bing/Search/Image?Query={0}&$format=json&Adult=%27Off%27", encoded);
+                    var url = string.Format(imgsearchurl, encoded, input.safesearch);
                     var resp = await http.GetAsync(url);
 
                     var respstr = await resp.Content.ReadAsStringAsync();

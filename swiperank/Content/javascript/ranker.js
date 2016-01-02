@@ -93,21 +93,37 @@ function finish()
 
 paint();
 
+document.onkeydown = function (event)
+{
+    if ( event.which ==  37 ) //left
+    {
+        leftwins();
+    }
+    else if ( event.which ==  39 ) //right
+    {
+        rightwins();
+    }
+}
 
-$("#all").on("swipeleft", function(ev) { 
-  $( "#left" ).css("background-color", "green" );
-  setTimeout(function () {
-    $( "#left" ).css("background-color", "white" );
-    ranker.better(); 
-  }, 300);
-});
-$("#all").on("swiperight", function(ev) { 
-  $( "#right" ).css("background-color", "green" );
-  setTimeout(function () {
-    $( "#right" ).css("background-color", "white" );
-    ranker.worse(); 
-  }, 300);
-});
+var leftwins = function (ev) {
+    $("#left").css("background-color", "green");
+    setTimeout(function () {
+        $("#left").css("background-color", "white");
+        ranker.better();
+    }, 300);
+};
+
+var rightwins = function(ev) { 
+    $( "#right" ).css("background-color", "green" );
+    setTimeout(function () {
+        $( "#right" ).css("background-color", "white" );
+        ranker.worse(); 
+    }, 300);
+};
+
+$("#all").on("swipeleft", leftwins);
+
+$("#all").on("swiperight", rightwins);
 
 $("#done").click(function () {
     finish();

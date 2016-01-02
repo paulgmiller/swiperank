@@ -12,6 +12,30 @@
 </head>
 <body>
    <div class="container-fluid">
+	<nav class="navbar navbar-default">
+	<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+		<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+			<span class="sr-only">Toggle navigation</span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>
+		<a class="navbar-brand" href="/">SwipeRank</a>
+		</div>
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		<ul class="nav navbar-nav">
+			<li><a href="/random">Random</a></li>        
+			<!-- put back when we have a model for this page.
+			<li><a href="/aggregateranking/@Model.ListName">Aggregate</a></li> 
+			-->
+		</ul>
+		<ul class="nav navbar-nav navbar-right">
+			<li><a href="/createlist">Create</a></li>
+		</ul>
+		</div><!-- /.navbar-collapse -->
+	</nav>
 	<form action="/createlist" method="POST">
 	<div class="form-group">
 		<label for="name">Name</label>
@@ -20,8 +44,9 @@
 		<input type="text" class="form-control" name="searchhelper" id="searchhelper"/>
 		<label for="content">Content</label>
 		<textarea class="form-control" name="content" id="content" rows="32"></textarea>
-	<label for="safesearch">Safesearch</label>
-	<select class="form-control" name="safesearch" id="safesearch">
+		<br />
+		<label for="safesearch">Safesearch</label>
+		<select class="form-inline" name="safesearch" id="safesearch">
 		<option>Moderate</option>
 		<option>Strict</option>
 		<option>Off</option>

@@ -8,6 +8,7 @@
     using System.Collections.Generic;
     using Newtonsoft.Json;
     using System;
+    using System.Configuration;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Text;
@@ -109,12 +110,13 @@
                 }
             };
 
-            const string key = "ignored:iXmLK5VWa0N0RdqJ4csrl6zDFw5DnFlwrPCbQcK4cqE=";
+            
             const string imgsearchurl = "https://api.datamarket.azure.com/Bing/Search/Image?Query=%27{0}%27&$format=json&Adult=%27{1}%27";
             Get["/createlist"] = _ => View["createlist"];
 
             Post["/createlist", runAsync: true] = async (param, token) =>
             {
+                string key = ConfigurationManager.AppSettings["bingimagekey"];
                 var http = new HttpClient();
                 var base64 = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(key));
                 http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", base64);
@@ -310,14 +312,14 @@
 
         }
 
-
+       
         private CloudBlobClient Client()
         {
-            var account = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=swiperankings;AccountKey=ReTB+/YWBrAeD7cC6//WrG2iRbG6D8ErOQRKI+Vcs5YJhXnQX/JFold6bsbW+Y5dFB9lGZUhoKpLat/o5b1gRA==");
+            var account = CloudStorageAccount.Parse(
+                ConfigurationManager.ConnectionStrings["swiperankings"].ConnectionString);
             return account.CreateCloudBlobClient();
         }
-
-
+        
         private CloudBlobContainer Rankings()
         {
             return Client().GetContainerReference("rankings");

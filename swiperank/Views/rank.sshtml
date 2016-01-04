@@ -39,13 +39,18 @@
             </ul>
             </div><!-- /.navbar-collapse -->
 		 </nav>
-		<style>img { width: 100%; }</style>
+		<style> img { width: 100%; }
+				.nopadding {
+					padding: 0 !important;
+					margin: 0 !important;
+				}
+		</style>
 		<div id = "all">
 		   <div id="listname" class="text-center"></div>
 		   <div id="header" class="text-center">swipe to the better side</div>
 		   <div class="row">
-			  <div class="col-xs-6" id="left"><img id="leftimg" class="img-responsive" src=""/></div>
-			  <div class="col-xs-6" id="right"><img id="rightimg" class="img-responsive" src=""/></div>
+			  <div class="col-xs-6 nopadding" id="left "><img id="leftimg" class="img-responsive nopadding" src=""/></div>
+			  <div class="col-xs-6 nopadding " id="right"><img id="rightimg" class="img-responsive nopadding" src=""/></div>
 		   </div>
 		    <div class="row">
 			  <div class="col-xs-6 text-center" id="lefttxt"></div>

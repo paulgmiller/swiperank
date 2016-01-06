@@ -200,7 +200,7 @@
 
         private async Task<HttpStatusCode> Save(IEnumerable<Entry> list, string name)
         {
-            CloudBlockBlob blob = Lists().GetBlockBlobReference(name);
+            CloudBlockBlob blob = Lists().GetBlockBlobReference(name.Trim());
 
             if (await blob.ExistsAsync())
                 return HttpStatusCode.Conflict;

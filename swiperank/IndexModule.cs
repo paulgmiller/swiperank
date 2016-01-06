@@ -175,14 +175,16 @@
                 return await blob.DownloadTextAsync();
             };
 
-            /*Delete["/list/{list*}", runAsync: true] = async (param, token) =>
+            Delete["/list/{list*}", runAsync: true] = async (param, token) =>
             {
+                if (!ConfigurationManager.AppSettings["deletepassword"].Equals(this.Request.Query["password"]))
+                    return HttpStatusCode.Unauthorized;
                 CloudBlockBlob blob = Lists().GetBlockBlobReference(param.list);
                 if (!await blob.ExistsAsync())
                     return HttpStatusCode.NotFound;
                 await blob.DeleteAsync();
                 return HttpStatusCode.OK;
-            };*/
+            };
 
             //better if we take it an reject or return hash url
             Get["/rename/{list*}", runAsync: true] = async (param, token) =>

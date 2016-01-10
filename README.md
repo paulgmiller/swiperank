@@ -14,7 +14,6 @@ Online ranking using side by comparisons and swiping.
 
 ##To Scrape.
 * Oscar red carpet
-* Sexiest Man candidate people. 
 * NFL/college football cheerleaders
 * FIX NBA
 

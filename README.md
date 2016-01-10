@@ -15,6 +15,4 @@ Online ranking using side by comparisons and swiping.
 ##To Scrape.
 * Oscar red carpet
 * NFL/college football cheerleaders
-* FIX NBA
-
 

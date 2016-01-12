@@ -12,8 +12,10 @@ Online ranking using side by comparisons and swiping.
 * Clean bad images out.
 * advertising (raepplication, about page, more cotnent on rank page.)
 * Ad ui controls for cap and max. 
+* Add source to createlist
 
 ##To Scrape.
 * Oscar red carpet
 * Miss universe national costume
+* Sculptre: http://www.visual-arts-cork.com/greatest-sculptures-ever.htm#list
 

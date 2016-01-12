@@ -11,8 +11,9 @@ Online ranking using side by comparisons and swiping.
 * links back to content or amazon refferalswiran-20)
 * Clean bad images out.
 * advertising (raepplication, about page, more cotnent on rank page.)
+* Ad ui controls for cap and max. 
 
 ##To Scrape.
 * Oscar red carpet
-* NFL/college football cheerleaders
+* Miss universe national costume
 

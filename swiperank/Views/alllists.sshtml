@@ -38,12 +38,7 @@
     
     <!-- Move to http://getbootstrap.com/components/#media-list when we have thumbnails --> 
     <div class="list-group">
-        @Each.Collections
-		<li>
-		<a href="/alllists?collection=@Current" class="list-group-item">@Current</a>
-		</li>
-		@EndEach
-		@Each.Lists
+       @Each
 		<li>
         <a href="/rank?list=@Current" class="list-group-item">@Current</a>
         <!-- What to do with aggregates 

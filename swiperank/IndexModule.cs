@@ -23,13 +23,8 @@
             {
                 var r = new Random();
                 var listing = await GetLists();
-                var index = r.Next(0, listing.Lists.Count() + listing.Collections.Count());
-                while (index >= listing.Lists.Count())
-                {
-                    listing = await GetLists(listing.Collections[index - listing.Lists.Count()]);
-                    index = r.Next(0, listing.Lists.Count() + listing.Collections.Count());
-                }
-                return Response.AsRedirect("/rank?list=" + listing.Lists[index]);
+                var index = r.Next(0, listing.Count());
+                return Response.AsRedirect("/rank?list=" + listing.ElementAt(index).Name);
             };
 
             Get["/rank"] = parameters =>
@@ -49,8 +44,17 @@
             Get["/", runAsync: true] = Get["/alllists", runAsync: true] = async (param, token) =>
             {
                 var collection = this.Request.Query["collection"] ?? ""; //if nothing empty string is the root
-                return View["alllists", await GetLists(collection)];
+                IEnumerable<CloudBlockBlob> lists = await GetLists(collection);
+                return View["alllists", SortLists(lists)];
             };
+
+            Get["/all", runAsync: true] = async (param, token) =>
+            {
+                IEnumerable<CloudBlockBlob> lists = await GetLists();
+                var lists2 = lists.Select(l => new { nam = l.Name, rankings = l.Metadata["rankcount"] });
+                return JsonConvert.SerializeObject(lists2);
+            };
+
 
             Get["/dedupe/{list*}", runAsync: true] = async (param, token) =>
             {
@@ -71,6 +75,9 @@
                 var blob = Rankings().GetBlockBlobReference(relativeUrl);
                 this.Request.Body.Seek(0, System.IO.SeekOrigin.Begin);
                 await blob.UploadFromStreamAsync(this.Request.Body);
+                CloudBlockBlob list = Lists().GetBlockBlobReference(param.list);
+                list.Metadata["rankcount"] = (int.Parse(list.Metadata["rankcount"]) + 1).ToString();
+                await list.SetMetadataAsync(); //don't bother waiting?
                 return "ranking/" + relativeUrl;
             };
 
@@ -78,7 +85,19 @@
             {
                 var aggregateranking = await Aggregate(param.list);
                 return View["aggregateranking", aggregateranking];
-                //return JsonConvert.SerializeObject(aggregateranking);
+            };
+
+            Get["/updatemetadata", runAsync: true] = async (param, token) =>
+            {
+                var lists = await GetLists();
+                var tasks = lists.Select(async list =>
+                {
+                    var rankings = await Rankings().ListBlobsSegmentedAsync(list.Name + "/", null);
+                    list.Metadata["rankcount"] = (rankings.Results.Count()).ToString();
+                    await list.SetMetadataAsync(); //don't bother waiting?
+                });
+                await Task.WhenAll(tasks);
+                return HttpStatusCode.OK;
             };
 
             Get["/ranking/{list*}", runAsync: true] = async (param, token) =>
@@ -198,6 +217,16 @@
             };
         }
 
+        private IEnumerable<string> SortLists(IEnumerable<CloudBlockBlob> blobs)
+        {
+            return blobs.OrderByDescending(b =>
+            {
+               return int.Parse(b.Metadata["rankcount"]);
+            }).ThenBy(b => b.Name, StringComparer.OrdinalIgnoreCase)
+              .Select(b => b.Name);
+        }
+
+
         private async Task<HttpStatusCode> Save(IEnumerable<Entry> list, string name)
         {
             CloudBlockBlob blob = Lists().GetBlockBlobReference(name.Trim());
@@ -227,7 +256,6 @@
             }
             return agg;
         }
-
 
         private async Task RenameAll(string from, string to)
         {
@@ -259,27 +287,16 @@
             await source.DeleteAsync();
         }
 
-        public class Listing 
+        private async Task<IEnumerable<CloudBlockBlob>> GetLists(string prefix = "") //todo switch to async
         {
-            public List<string> Lists;
-            public List<string> Collections;
+            var blobs = await Lists().ListBlobsSegmentedAsync(prefix, true, 
+                BlobListingDetails.Metadata, null, null, null, null);// "", false, BlobListingDetails.None, null, null, null, null)
+            return Filter(blobs.Results.OfType<CloudBlockBlob>());
         }
 
-
-        private async Task<Listing> GetLists(string prefix = "") //todo switch to async
+        private IEnumerable<CloudBlockBlob> Filter(IEnumerable<CloudBlockBlob> list)
         {
-            var all = await Lists().ListBlobsSegmentedAsync(prefix,null);// "", false, BlobListingDetails.None, null, null, null, null);
-            
-            return new Listing()
-            {
-                Lists = FilterAndSort(all.Results.OfType<CloudBlockBlob>().Select(b => b.Name)),
-                Collections = FilterAndSort(all.Results.OfType<CloudBlobDirectory>().Select(d => d.Prefix))
-            };
-        }
-
-        private List<string> FilterAndSort(IEnumerable<string> list)
-        {
-            return list.Where(l => !l.ToLower().Contains("porn")).OrderBy(n => n, StringComparer.OrdinalIgnoreCase).ToList();
+            return list.Where(l => !l.Name.ToLower().Contains("porn"));
         }
 
         private async Task<IEnumerable<Entry>> CacheImages(IEnumerable<Entry> entries)

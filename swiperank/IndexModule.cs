@@ -226,7 +226,7 @@
 
         private async Task<IEnumerable<string>> SortLists(IEnumerable<CloudBlockBlob> blobs)
         {
-            return blobs.OrderByDescending(b => await RankCount(b))
+            return blobs.OrderByDescending(async b => await RankCount(b))
                         .ThenBy(b => b.Name, StringComparer.OrdinalIgnoreCase)
                         .Select(b => b.Name);
         }

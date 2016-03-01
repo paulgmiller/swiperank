@@ -51,7 +51,7 @@
             Get["/all", runAsync: true] = async (param, token) =>
             {
                 IEnumerable<CloudBlockBlob> lists = await GetLists();
-                var lists2 = lists.Select(l => new { nam = l.Name, rankings = l.Metadata["rankcount"] });
+                var lists2 = lists.Select(l => new { nam = l.Name, rankings = RankCount(l) });
                 return JsonConvert.SerializeObject(lists2);
             };
 
@@ -75,9 +75,17 @@
                 var blob = Rankings().GetBlockBlobReference(relativeUrl);
                 this.Request.Body.Seek(0, System.IO.SeekOrigin.Begin);
                 await blob.UploadFromStreamAsync(this.Request.Body);
-                CloudBlockBlob list = Lists().GetBlockBlobReference(param.list);
-                list.Metadata["rankcount"] = (int.Parse(list.Metadata["rankcount"]) + 1).ToString();
-                await list.SetMetadataAsync(); //don't bother waiting?
+                try
+                {
+                    string name = param.list;
+                    CloudBlockBlob list = Lists().GetBlockBlobReference(name);
+                    int r = await RankCount(list);
+                    await SetRankCount(list, ++r);
+                }
+                catch (Exception e)
+                {
+                    return e.ToString();
+                }
                 return "ranking/" + relativeUrl;
             };
 
@@ -93,8 +101,7 @@
                 var tasks = lists.Select(async list =>
                 {
                     var rankings = await Rankings().ListBlobsSegmentedAsync(list.Name + "/", null);
-                    list.Metadata["rankcount"] = (rankings.Results.Count()).ToString();
-                    await list.SetMetadataAsync(); //don't bother waiting?
+                    await SetRankCount(list, rankings.Results.Count());
                 });
                 await Task.WhenAll(tasks);
                 return HttpStatusCode.OK;
@@ -219,13 +226,31 @@
 
         private IEnumerable<string> SortLists(IEnumerable<CloudBlockBlob> blobs)
         {
-            return blobs.OrderByDescending(b =>
-            {
-               return int.Parse(b.Metadata["rankcount"]);
-            }).ThenBy(b => b.Name, StringComparer.OrdinalIgnoreCase)
-              .Select(b => b.Name);
+            return blobs.OrderByDescending(b => RankCount(b))
+                        .ThenBy(b => b.Name, StringComparer.OrdinalIgnoreCase)
+                        .Select(b => b.Name);
         }
 
+        private async Task<int> RankCount(CloudBlockBlob b)
+        {
+            if (b.Metadata == null)
+                await b.FetchAttributesAsync();
+            try
+            {
+                return int.Parse(b.Metadata["rankcount"] ?? "0");
+            }
+            catch (KeyNotFoundException)
+            {
+                return 0;
+            }
+
+        }
+
+        private async Task SetRankCount(CloudBlockBlob b, int newcount)
+        {
+            b.Metadata["rankcount"] = newcount.ToString();
+            await b.SetMetadataAsync();
+        }
 
         private async Task<HttpStatusCode> Save(IEnumerable<Entry> list, string name)
         {
@@ -237,6 +262,7 @@
             list = list.Distinct(new EntryComparer());
             list = await CacheImages(list);
             await blob.UploadTextAsync(JsonConvert.SerializeObject(list));
+            await SetRankCount(blob, 0);
             return HttpStatusCode.Created;
         }
 

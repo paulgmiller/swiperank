@@ -32,15 +32,9 @@
                 if (string.IsNullOrEmpty(this.Request.Query["list"]))
                     return Response.AsRedirect("/random");
                 var rankembryo = new Ranking { ListName = this.Request.Query["list"]};
+                //debating whether to just embed the list in the page rather than making an ajax call
                 return View["rank", rankembryo];
             };
-
-            /*Won't work till we don't ajax fetch the list
-            Get["/rank/{list*}"] = parameters =>
-            {
-                var rankembryo = new Ranking { ListName = parameters.list };
-                return View["rank", rankembryo];
-            };*/
 
             Get["/", runAsync: true] = Get["/alllists", runAsync: true] = async (param, token) =>
             {

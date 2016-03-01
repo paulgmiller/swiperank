@@ -226,7 +226,7 @@
 
         private IEnumerable<string> SortLists(IEnumerable<CloudBlockBlob> blobs)
         {
-            return blobs.OrderByDescending(b => RankCount(b))
+            return blobs.OrderByDescending(b => await RankCount(b))
                         .ThenBy(b => b.Name, StringComparer.OrdinalIgnoreCase)
                         .Select(b => b.Name);
         }

@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="msapplication-tap-highlight" content="no" />
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
-    <title>Ranker</title>
+    <title>Rank @Model.PrettyListName</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>    
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
@@ -30,10 +30,8 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
 			    <li><a href="/random">Random</a></li>        
-				<!-- put back when we have a model for this page.
 				<li><a href="/aggregateranking/@Model.ListName">Aggregate</a></li> 
-				-->
-            </ul>
+			</ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="/createlist">Create</a></li>
             </ul>

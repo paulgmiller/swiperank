@@ -4,7 +4,6 @@ var url = URI(document.URL);
 var query = url.query(true); 
 var pick = query["list"] || "no list specified";
 var ppick = new String(pick).replace("_", " ");
-document.title = ppick;
 $("#listname").text(ppick);
 
 $.getJSON( "/list/" + pick).fail(function(err) {

@@ -31,30 +31,25 @@
             {
                 if (string.IsNullOrEmpty(this.Request.Query["list"]))
                     return Response.AsRedirect("/random");
-                return View["rank"];
+                var rankembryo = new Ranking { ListName = this.Request.Query["list"]};
+                return View["rank", rankembryo];
             };
 
-            Get["/rank"] = parameters =>
+            /*Won't work till we don't ajax fetch the list
+            Get["/rank/{list*}"] = parameters =>
             {
-                if (string.IsNullOrEmpty(this.Request.Query["list"]))
-                    return Response.AsRedirect("/random");
-                return View["rank"];
-            };
+                var rankembryo = new Ranking { ListName = parameters.list };
+                return View["rank", rankembryo];
+            };*/
 
             Get["/", runAsync: true] = Get["/alllists", runAsync: true] = async (param, token) =>
             {
                 var collection = this.Request.Query["collection"] ?? ""; //if nothing empty string is the root
                 IEnumerable<CloudBlockBlob> lists = await GetLists(collection);
-                return View["alllists", await SortLists(lists)];
+                //lists.Select(l => new { nam = l.Name, rankings = RankCount(l) }) (show rank counts?} 
+                return View["alllists", SortLists(lists)];
             };
-
-            Get["/all", runAsync: true] = async (param, token) =>
-            {
-                IEnumerable<CloudBlockBlob> lists = await GetLists();
-                var lists2 = lists.Select(l => new { nam = l.Name, rankings = RankCount(l) });
-                return JsonConvert.SerializeObject(lists2);
-            };
-
+            
 
             Get["/dedupe/{list*}", runAsync: true] = async (param, token) =>
             {
@@ -185,7 +180,7 @@
                 var saved = await Save(await Task.WhenAll(tasklist), input.name);
                 if (saved == HttpStatusCode.Created)
                 {
-                    return Response.AsRedirect("/Rank?list=" + System.Web.HttpUtility.UrlEncode(input.name));
+                    return Response.AsRedirect("/rank?list=" + System.Web.HttpUtility.UrlEncode(input.name));
                 }
                 return saved;
 
@@ -224,7 +219,7 @@
             };
         }
 
-        private async Task<IEnumerable<string>> SortLists(IEnumerable<CloudBlockBlob> blobs)
+        private IEnumerable<string> SortLists(IEnumerable<CloudBlockBlob> blobs)
         {
             return blobs.OrderByDescending(b => RankCount(b).Result)
                         .ThenBy(b => b.Name, StringComparer.OrdinalIgnoreCase)

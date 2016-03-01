@@ -45,7 +45,7 @@
             {
                 var collection = this.Request.Query["collection"] ?? ""; //if nothing empty string is the root
                 IEnumerable<CloudBlockBlob> lists = await GetLists(collection);
-                return View["alllists", SortLists(lists)];
+                return View["alllists", await SortLists(lists)];
             };
 
             Get["/all", runAsync: true] = async (param, token) =>
@@ -224,7 +224,7 @@
             };
         }
 
-        private IEnumerable<string> SortLists(IEnumerable<CloudBlockBlob> blobs)
+        private async Task<IEnumerable<string>> SortLists(IEnumerable<CloudBlockBlob> blobs)
         {
             return blobs.OrderByDescending(b => await RankCount(b))
                         .ThenBy(b => b.Name, StringComparer.OrdinalIgnoreCase)

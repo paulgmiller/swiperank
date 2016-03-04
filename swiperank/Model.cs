@@ -35,6 +35,7 @@
 
     public class ImageResult
     {
+        public string Title;
         public string mediaurl;
     }
 

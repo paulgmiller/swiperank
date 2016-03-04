@@ -180,6 +180,54 @@
 
             };
 
+            Post["/createfromterm/{term*}", runAsync: true] = async (param, token) =>
+            {
+                string key = ConfigurationManager.AppSettings["bingimagekey"];
+                var http = new HttpClient();
+                var base64 = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(key));
+                http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", base64);
+                string term = param.term; 
+                string encodedterm = System.Web.HttpUtility.UrlDecode(param.term);
+                // var encoded = System.Web.HttpUtility.UrlEncode(searchterm);
+
+                var url = string.Format(imgsearchurl, param.term, "Moderate"); //take safe search as param
+                var resp = await http.GetAsync(url);
+
+                var respstr = await resp.Content.ReadAsStringAsync();
+                ImageResponse respjson = JsonConvert.DeserializeObject<ImageResponse>(respstr);
+
+                var allimages = respjson.d.results.Where((ImageResult img) =>
+                {
+                    var req = new HttpRequestMessage(HttpMethod.Head, new Uri(img.mediaurl));
+                    try
+                    {
+                        return http.SendAsync(req).Result.IsSuccessStatusCode;
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
+                });
+                
+                var entries = allimages.Take(32).Select(image =>
+                {
+                    return new Entry
+                    {
+                        name = image.Title,
+                        img = image.mediaurl
+                    };
+                });
+                     
+                
+                var saved = await Save(entries, encodedterm);
+                if (saved == HttpStatusCode.Created)
+                {
+                    return Response.AsRedirect("/rank?list=" + term);
+                }
+                return saved;
+
+            };
+
 
 
             Get["/list/{list*}", runAsync: true] = async (param, token) =>

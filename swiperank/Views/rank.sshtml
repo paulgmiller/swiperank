@@ -30,7 +30,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
 			    <li><a href="/random">Random</a></li>        
-				<li><a href="/@Model.ListName/aggregate">Aggregate</a></li> 
+				<li><a href="/aggregateranking/@Model.ListName">Aggregate</a></li> 
 			</ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="/createlist">Create</a></li>

@@ -20,7 +20,7 @@
         public ListModule() : base("/list")
         {
          
-            Get["/{list*}/dedupe", runAsync: true] = async (param, token) =>
+            Get["/dedupe/{list*}", runAsync: true] = async (param, token) =>
             {
                 CloudBlockBlob blob = Lists().GetBlockBlobReference(param.list);
                 var list = JsonConvert.DeserializeObject<IEnumerable<Entry>>(await blob.DownloadTextAsync());
@@ -30,25 +30,6 @@
                 return JsonConvert.SerializeObject(new { oldcount = list.Count(), newcount = newlist.Count() });
 
             };
-
-          
-            Get["/{list*}/aggregate", runAsync: true] = async (param, token) =>
-            {
-                var aggregateranking = await Aggregate(param.list);
-                return View["aggregateranking", aggregateranking];
-            };
-
-            /*Get["/updatemetadata", runAsync: true] = async (param, token) =>
-            {
-                var lists = await GetLists();
-                var tasks = lists.Select(async list =>
-                {
-                    var rankings = await Rankings().ListBlobsSegmentedAsync(list.Name + "/", null);
-                    await SetRankCount(list, rankings.Results.Count());
-                });
-                await Task.WhenAll(tasks);
-                return HttpStatusCode.OK;
-            };*/
 
             Post["/{list*}", runAsync: true] = async (param, token) =>
             {
@@ -216,24 +197,6 @@
             await SetRankCount(blob, 0);
             return HttpStatusCode.Created;
         }
-
-        private async Task<AggregateRanking> Aggregate(string list)
-        {
-            var rankingnames = await Rankings().ListBlobsSegmentedAsync(list + "/", null);
-            var rankings = await Task.WhenAll(rankingnames.Results.OfType<CloudBlockBlob>().Select(async r =>
-            {
-                var json = await r.DownloadTextAsync();
-                //need to save and pass back cap/max and seed.
-                return JsonConvert.DeserializeObject<Ranking>(json);
-            }));
-            var agg = new AggregateRanking() { ListName = list };
-            foreach (var r in rankings)
-            {
-                agg.Add(r);
-            }
-            return agg;
-        }
-
         private async Task RenameAll(string from, string to)
         {
             await RenameAsync(Lists(), from, to);

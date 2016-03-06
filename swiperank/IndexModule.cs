@@ -66,11 +66,23 @@
                 return "ranking/" + relativeUrl;
             };
 
-            Get["/aggregateranking/{list*}"] = param =>
+            Get["/aggregateranking/{list*}", runAsync:true] = async (param, token) =>
             {
-                string newurl = string.Format("/list/{0}/aggregate", param.list);
-                return Response.AsRedirect(newurl);
+                var aggregateranking = await Aggregate(param.list);
+                return View["aggregateranking", aggregateranking];
             };
+
+            /*Get["/updatemetadata", runAsync: true] = async (param, token) =>
+            {
+                var lists = await GetLists();
+                var tasks = lists.Select(async list =>
+                {
+                    var rankings = await Rankings().ListBlobsSegmentedAsync(list.Name + "/", null);
+                    await SetRankCount(list, rankings.Results.Count());
+                });
+                await Task.WhenAll(tasks);
+                return HttpStatusCode.OK;
+            };*/
 
             Get["/ranking/{list*}", runAsync: true] = async (param, token) =>
             {
@@ -107,6 +119,24 @@
                             //return age < TimeSpan.FromDays(7);
                         })
                         .Select(b => b.Name);
+        }
+
+
+        private async Task<AggregateRanking> Aggregate(string list)
+        {
+            var rankingnames = await Rankings().ListBlobsSegmentedAsync(list + "/", null);
+            var rankings = await Task.WhenAll(rankingnames.Results.OfType<CloudBlockBlob>().Select(async r =>
+            {
+                var json = await r.DownloadTextAsync();
+                //need to save and pass back cap/max and seed.
+                return JsonConvert.DeserializeObject<Ranking>(json);
+            }));
+            var agg = new AggregateRanking() { ListName = list };
+            foreach (var r in rankings)
+            {
+                agg.Add(r);
+            }
+            return agg;
         }
 
         private async Task<int> RankCount(CloudBlockBlob b)

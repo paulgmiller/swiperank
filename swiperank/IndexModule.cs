@@ -268,7 +268,7 @@
                         .Where( (CloudBlockBlob b) =>
                         {
                             if (RankCount(b).Result > 0) return true;
-                            var age = b.Properties.LastModified.Value - DateTime.UtcNow;
+                            var age = DateTime.UtcNow - b.Properties.LastModified.Value;
                             return age < TimeSpan.FromDays(7);
                         })
                         .Select(b => b.Name);

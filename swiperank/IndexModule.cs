@@ -265,6 +265,12 @@
         {
             return blobs.OrderByDescending(b => RankCount(b).Result)
                         .ThenBy(b => b.Name, StringComparer.OrdinalIgnoreCase)
+                        .Where( (CloudBlockBlob b) =>
+                        {
+                            if (RankCount(b).Result > 0) return true;
+                            var age = b.Properties.LastModified.Value - DateTime.UtcNow;
+                            return age < TimeSpan.FromDays(7);
+                        })
                         .Select(b => b.Name);
         }
 

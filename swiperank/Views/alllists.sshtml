@@ -42,7 +42,7 @@
 		<li>
         <a href="/rank?list=@Current" class="list-group-item">@Current</a>
         <!-- What to do with aggregates 
-		<a href="/rank?list=@Current">@Current</a>  (<a href="/aggregateranking/@Current">results</a>)
+		<a href="/rank?list=@Current">@Current</a>  (<a href="/@Current/aggregate">results</a>)
 		-->
         </li>
 		@EndEach

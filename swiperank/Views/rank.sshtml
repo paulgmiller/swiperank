@@ -42,15 +42,6 @@
 					padding: 0 !important;
 					margin: 0 !important;
 				}
-				#all {
-					display: table;
-					table-layout: fixed;
-				}
-				#right #left {
-					display: table-cell;
-					vertical-align: middle;
-					float: none;
-				}
 		</style>
 		<div id = "all">
 		   <div id="listname" class="text-center"></div>

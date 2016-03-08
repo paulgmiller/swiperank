@@ -80,11 +80,11 @@ function paint() {
   $("#righttxt").text(ranker.candidate.name);
   var ri = $('#rightimg');
   ri.attr("src", ranker.candidate.cachedImg || ranker.candidate.img);
-  ri.onload = function () { ri.show(); }
+  ri.show();
   $("#lefttxt").text(ranker.consideration().name + " " + (ranker.doppel()+1) + "/" + ranker.ranking.length);
   var li = $('#leftimg');
   li.attr("src", ranker.consideration().cachedImg || ranker.consideration().img);
-  li.onload = function () { li.show(); }
+  li.show(); 
 }
 
 function finish()

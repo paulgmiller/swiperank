@@ -5,7 +5,6 @@ Online ranking using side by comparisons and swiping.
 
 ##Todo
 * Hardcode hight cap or raking page? Vertical align, Resize Images? http://imageprocessor.org/
-* Better transition. Dissapear better to avoid errors
 * pick images on second part of create list. Carosel from bootstrap
 * better share buttons http://blog.himpfen.com/social-sharing-buttons-bootstrap-font-awesome/
 * links back to content or amazon refferalswiran-20)
@@ -13,6 +12,7 @@ Online ranking using side by comparisons and swiping.
 * advertising (raepplication, about page, more cotnent on rank page.)
 * Ad ui controls for cap and max. 
 * Add source to createlist
+* Better transition than green background
 
 ##To Scrape.
 * Oscar red carpet

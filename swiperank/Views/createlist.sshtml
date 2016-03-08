@@ -36,7 +36,7 @@
 		</ul>
 		</div><!-- /.navbar-collapse -->
 	</nav>
-	<form action="/createlist" method="POST">
+	<form action="/list" method="POST">
 	<div class="form-group">
 		<label for="name">Name</label>
 		<input type="text" class="form-control" name="name" id="name" />

@@ -39,7 +39,8 @@ var ranker = {
       {
         this.ranking.splice(this.min, 0, this.candidate);
         //if sourcelist.empty done.
-      	this.candidate = imgsourcelist.pop();
+        this.candidate = imgsourcelist.pop();
+        $('#rightimg').hide();
         this.min = 0;
         if (this.ranking.length > this.cap)
         {
@@ -58,10 +59,12 @@ var ranker = {
       else if (this.min >= this.cap)
       {
         this.candidate = imgsourcelist.pop();
+        $('#rightimg').hide();
         this.min = 0;
         this.max = (this.cap*2-1);
       }
-      
+      $('#leftimg').hide();
+
       paint();
     },
     consideration : function() { return this.ranking[this.doppel()]},
@@ -75,9 +78,13 @@ function paint() {
      return;
   }
   $("#righttxt").text(ranker.candidate.name);
-  $('#rightimg').attr("src",ranker.candidate.cachedImg || ranker.candidate.img);
+  var ri = $('#rightimg');
+  ri.attr("src", ranker.candidate.cachedImg || ranker.candidate.img);
+  ri.show();
   $("#lefttxt").text(ranker.consideration().name + " " + (ranker.doppel()+1) + "/" + ranker.ranking.length);
-  $('#leftimg').attr("src", ranker.consideration().cachedImg || ranker.consideration().img);
+  var li = $('#leftimg');
+  li.attr("src", ranker.consideration().cachedImg || ranker.consideration().img);
+  li.show(); 
 }
 
 function finish()

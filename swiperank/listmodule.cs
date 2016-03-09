@@ -43,50 +43,21 @@
             };
 
             
-            const string imgsearchurl = "https://api.datamarket.azure.com/Bing/Search/Image?Query=%27{0}%27&$format=json&Adult=%27{1}%27";
-
             Post["/", runAsync: true] = async (param, token) =>
             {
-                string key = ConfigurationManager.AppSettings["bingimagekey"];
-                var http = new HttpClient();
-                var base64 = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(key));
-                http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", base64);
                 var input = this.Bind<NewList>();
 
-                var tasklist = input.Lines.Select(async line => 
+                var tasklist = input.Lines.Select(async line =>
                 {
-                    var encoded = System.Web.HttpUtility.UrlEncode(line + " " + input.searchhelper);
-
-                    var url = string.Format(imgsearchurl, encoded, input.safesearch);
-                    var resp = await http.GetAsync(url);
-
-                    var respstr = await resp.Content.ReadAsStringAsync();
-                    var respjson = JsonConvert.DeserializeObject<ImageResponse>(respstr);
-
-                    var image = respjson.d.results.FirstOrDefault(img =>
-                    {
-                        var req = new HttpRequestMessage(HttpMethod.Head, new Uri(img.mediaurl));
-                        try
-                        {
-                            return http.SendAsync(req).Result.IsSuccessStatusCode;
-                        }
-                        catch (Exception)
-                        {
-                            return false;
-                        }
-                    });
-
+                    var image = (await GetValidResults(line + " " +  input.searchhelper, input.safesearch)).FirstOrDefault();
                     if (image == null)
                     {
                         throw new Exception("no results for " + line);
                     }
-
-                    return new Entry
-                    {
-                        name = line,
-                        img = image.mediaurl
-                    };
+                    image.name = line;
+                    return image;
                 });
+
                 var saved = await Save(await Task.WhenAll(tasklist), input.name);
                 if (saved == HttpStatusCode.Created)
                 {
@@ -98,42 +69,11 @@
 
             Post["/{term*}", runAsync: true] = async (param, token) =>
             {
-                string key = ConfigurationManager.AppSettings["bingimagekey"];
-                var http = new HttpClient();
-                var base64 = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(key));
-                http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", base64);
                 string term = param.term; 
                 string encodedterm = System.Web.HttpUtility.UrlDecode(param.term);
                 // var encoded = System.Web.HttpUtility.UrlEncode(searchterm);
 
-                var url = string.Format(imgsearchurl, param.term, "Moderate"); //take safe search as param
-                var resp = await http.GetAsync(url);
-
-                var respstr = await resp.Content.ReadAsStringAsync();
-                ImageResponse respjson = JsonConvert.DeserializeObject<ImageResponse>(respstr);
-
-                var allimages = respjson.d.results.Where((ImageResult img) =>
-                {
-                    var req = new HttpRequestMessage(HttpMethod.Head, new Uri(img.mediaurl));
-                    try
-                    {
-                        return http.SendAsync(req).Result.IsSuccessStatusCode;
-                    }
-                    catch (Exception)
-                    {
-                        return false;
-                    }
-                });
-                
-                var entries = allimages.Take(32).Select(image =>
-                {
-                    return new Entry
-                    {
-                        name = image.Title,
-                        img = image.mediaurl
-                    };
-                });
-                     
+                var entries = (await GetValidResults(term, "Moderate")).Take(32);
                 
                 var saved = await Save(entries, encodedterm);
                 if (saved == HttpStatusCode.Created)
@@ -141,7 +81,6 @@
                     return Response.AsRedirect("/rank?list=" + term);
                 }
                 return saved;
-
             };
 
 
@@ -175,6 +114,44 @@
 
                 return HttpStatusCode.OK;
             };
+        }
+
+        const string imgsearchurl = "https://api.datamarket.azure.com/Bing/Search/Image?Query=%27{0}%27&$format=json&Adult=%27{1}%27";
+
+        private async Task<IEnumerable<Entry>> GetValidResults(string query, string safesearch)
+        {
+            string key = ConfigurationManager.AppSettings["bingimagekey"];
+            var http = new HttpClient();
+            var base64 = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(key));
+            http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", base64);
+
+
+            var encoded = System.Web.HttpUtility.UrlEncode(query);
+
+            var url = string.Format(imgsearchurl, encoded, safesearch);
+            var resp = await http.GetAsync(url);
+
+            var respstr = await resp.Content.ReadAsStringAsync();
+            var respjson = JsonConvert.DeserializeObject<ImageResponse>(respstr);
+
+            return respjson.d.results.Where(img =>
+            {
+                var req = new HttpRequestMessage(HttpMethod.Head, new Uri(img.mediaurl));
+                try
+                {
+                    var imgresp = http.SendAsync(req).Result;
+                    return imgresp.IsSuccessStatusCode &&
+                           imgresp.Headers.GetValues("content-type").Any(type => type.ToLower().StartsWith("image"));
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }).Select(image => new Entry
+            {
+                name = image.Title,
+                img = image.mediaurl
+            });
         }
 
         //somewhere else?

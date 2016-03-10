@@ -49,7 +49,7 @@
 
                 var tasklist = input.Lines.Select(async line =>
                 {
-                    var image = (await GetValidResults(line + " " +  input.searchhelper, input.safesearch)).FirstOrDefault();
+                    var image = (await GetValidResults(line + " " +  input.searchquery, input.safesearch)).FirstOrDefault();
                     if (image == null)
                     {
                         throw new Exception("no results for " + line);
@@ -67,18 +67,16 @@
 
             };
 
-            Post["/{term*}", runAsync: true] = async (param, token) =>
+            Post["/fromquery", runAsync: true] = async (param, token) =>
             {
-                string term = param.term; 
-                string encodedterm = System.Web.HttpUtility.UrlDecode(param.term);
-                // var encoded = System.Web.HttpUtility.UrlEncode(searchterm);
-
-                var entries = (await GetValidResults(term, "Moderate")).Take(32);
+                var input = this.Bind<NewList>();
                 
-                var saved = await Save(entries, encodedterm);
+                var entries = (await GetValidResults(input.searchquery, "Moderate")).Take(32);
+                
+                var saved = await Save(entries, input.name);
                 if (saved == HttpStatusCode.Created)
                 {
-                    return Response.AsRedirect("/rank?list=" + term);
+                    return Response.AsRedirect("/rank?list=" + System.Web.HttpUtility.UrlEncode(input.name));
                 }
                 return saved;
             };

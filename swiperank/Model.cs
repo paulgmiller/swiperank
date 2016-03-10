@@ -42,7 +42,7 @@
     public class NewList
     {
         public string name;
-        public string searchhelper;
+        public string searchquery;
         public string content;
         public IEnumerable<string> Lines { get { return content.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries); } }
         public string safesearch;

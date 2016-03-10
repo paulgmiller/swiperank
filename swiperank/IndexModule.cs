@@ -104,7 +104,8 @@
 
             
             Get["/createlist"] = _ => View["createlist"];
-          
+            Get["/createlist"] = _ => View["createlistfromquery"];
+
         }
 
         private IEnumerable<string> SortLists(IEnumerable<CloudBlockBlob> blobs)

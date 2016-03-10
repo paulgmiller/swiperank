@@ -36,11 +36,11 @@
 		</ul>
 		</div><!-- /.navbar-collapse -->
 	</nav>
-	<form action="/list" method="POST">
+	<form action="/list/fromquery" method="POST">
 	<div class="form-group">
 		<label for="name">Name</label>
 		<input type="text" class="form-control" name="name" id="name" />
-		<label for="searchhelper">Search help text</label>
+		<label for="search text">Search query</label>
 		<input type="text" class="form-control" name="searchquery" id="searchquery"/>
 		<label for="content">Content</label>
 		<textarea class="form-control" name="content" id="content" rows="32"></textarea>

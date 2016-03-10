@@ -142,7 +142,7 @@
                 {
                     var imgresp = http.SendAsync(req).Result;
                     return imgresp.IsSuccessStatusCode &&
-                           imgresp.Headers.GetValues("content-type").Any(type => type.ToLower().StartsWith("image"));
+                           imgresp.Headers.GetValues("Content-Type").Any(type => type.ToLower().StartsWith("image"));
                 }
                 catch (Exception)
                 {

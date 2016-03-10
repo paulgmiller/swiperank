@@ -104,7 +104,7 @@
 
             
             Get["/createlist"] = _ => View["createlist"];
-            Get["/createlist"] = _ => View["createlistfromquery"];
+            Get["/createlistfromquery"] = _ => View["createlistfromquery"];
 
         }
 

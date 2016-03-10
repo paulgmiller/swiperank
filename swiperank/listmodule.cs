@@ -71,8 +71,11 @@
             {
                 var input = this.Bind<NewList>();
                 
-                var entries = (await GetValidResults(input.searchquery, "Moderate")).Take(32);
-                
+                var entries = (await GetValidResults(input.searchquery, input.safesearch)).Take(32);
+                if (!entries.Any())
+                {
+                    throw new Exception("no results for " + input.searchquery);
+                }
                 var saved = await Save(entries, input.name);
                 if (saved == HttpStatusCode.Created)
                 {

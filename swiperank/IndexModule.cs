@@ -135,6 +135,7 @@
             var agg = new AggregateRanking() { ListName = list };
             foreach (var r in rankings)
             {
+                if (r == null) continue;
                 agg.Add(r);
             }
             return agg;

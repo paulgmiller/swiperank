@@ -70,6 +70,10 @@
             var score = ranking.Count;
             foreach (var rank in ranking)
             {
+                if (rank == null)
+                {
+                    continue;
+                }
                 if (ranked.ContainsKey(rank.img))
                 {
                     ranked[rank.img].score += score;

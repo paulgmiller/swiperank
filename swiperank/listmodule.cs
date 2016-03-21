@@ -71,8 +71,11 @@
             {
                 var input = this.Bind<NewList>();
                 
-                var entries = (await GetValidResults(input.searchquery, "Moderate")).Take(32);
-                
+                var entries = (await GetValidResults(input.searchquery, input.safesearch)).Take(32);
+                if (!entries.Any())
+                {
+                    throw new Exception("no results for " + input.searchquery);
+                }
                 var saved = await Save(entries, input.name);
                 if (saved == HttpStatusCode.Created)
                 {
@@ -132,14 +135,17 @@
             var respstr = await resp.Content.ReadAsStringAsync();
             var respjson = JsonConvert.DeserializeObject<ImageResponse>(respstr);
 
+            if (!respjson.d.results.Any())
+                throw new Exception("no results from" + url);
+
             return respjson.d.results.Where(img =>
             {
                 var req = new HttpRequestMessage(HttpMethod.Head, new Uri(img.mediaurl));
                 try
                 {
                     var imgresp = http.SendAsync(req).Result;
-                    return imgresp.IsSuccessStatusCode &&
-                           imgresp.Headers.GetValues("content-type").Any(type => type.ToLower().StartsWith("image"));
+                    return imgresp.IsSuccessStatusCode; // &&
+                           //imgresp.Headers.GetValues("Content-Type").Any(type => type.ToLower().StartsWith("image"));
                 }
                 catch (Exception)
                 {

@@ -39,7 +39,7 @@
 		 </nav>
 		<style> img { width: 100%; }
 				.nopadding {
-					padding: 2 !important;
+					padding: 1 !important;
 					margin: 0 !important;
 				}
 		</style>

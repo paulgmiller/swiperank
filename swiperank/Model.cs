@@ -83,7 +83,7 @@
                     ranked.Add(rank.img, new EntryWithScore {
                         name = rank.name,
                         img = rank.img,
-                        cachedImg = rank.img, ///why?
+                        cachedImg = rank.cachedImg ?? rank.img;
                         score = score,
                     });
                 }

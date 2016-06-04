@@ -74,16 +74,18 @@
                 {
                     continue;
                 }
-                if (ranked.ContainsKey(rank.img))
+                EntryWithScore existing; 
+                if (ranked.TryGetValue(rank.img, out existing))
                 {
-                    ranked[rank.img].score += score;
+
+                    existing.score += score;
                 }
                 else
                 {
                     ranked.Add(rank.img, new EntryWithScore {
                         name = rank.name,
                         img = rank.img,
-                        cachedImg = rank.cachedImg ?? rank.img,
+                        cachedImg = rank.cachedImg ?? ListModule.CachedImg(rank.img).Uri.ToString(),
                         score = score,
                     });
                 }

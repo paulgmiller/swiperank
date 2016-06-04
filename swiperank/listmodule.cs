@@ -210,15 +210,11 @@
 
         private async Task<IEnumerable<Entry>> CacheImages(IEnumerable<Entry> entries)
         {
-            MD5 md5Hasher = MD5.Create();
-            var images = Client().GetContainerReference("images");
             var http = new HttpClient();
 
             var tasks = entries.Select(async e =>
             {
-                var hash = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(e.img));
-                var hashname = System.BitConverter.ToString(hash).Replace("-", "");
-                var blob = images.GetBlockBlobReference(hashname);
+                var blob = CachedImg(e.img);
                 e.cachedImg = blob.Uri.ToString();
                 if (!(await blob.ExistsAsync()))
                 {
@@ -240,8 +236,17 @@
 
         }
 
+        internal static CloudBlockBlob CachedImg(string imageurl)
+        {
+            MD5 md5Hasher = MD5.Create();
+            var images = Client().GetContainerReference("images");
+            var hash = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(imageurl));
+            var hashname = System.BitConverter.ToString(hash).Replace("-", "");
+            return images.GetBlockBlobReference(hashname);
+        }
+
        
-        private CloudBlobClient Client()
+        private static CloudBlobClient Client()
         {
             var account = CloudStorageAccount.Parse(
                 ConfigurationManager.ConnectionStrings["swiperankings"].ConnectionString);

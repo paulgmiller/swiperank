@@ -216,7 +216,7 @@
             {
                 var blob = CachedImg(e.img);
                 e.cachedImg = blob.Uri.ToString();
-                if (!!(await blob.ExistsAsync()))
+                if (!(await blob.ExistsAsync()))
                 {
                     try
                     {

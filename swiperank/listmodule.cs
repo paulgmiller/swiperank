@@ -216,7 +216,7 @@
             {
                 var blob = CachedImg(e.img);
                 e.cachedImg = blob.Uri.ToString();
-                if (!(await blob.ExistsAsync()))
+                if (!!(await blob.ExistsAsync()))
                 {
                     try
                     {
@@ -238,8 +238,14 @@
 
         internal static CloudBlockBlob CachedImg(string imageurl)
         {
-            MD5 md5Hasher = MD5.Create();
             var images = Client().GetContainerReference("images");
+            if (imageurl.StartsWith(images.Uri.AbsoluteUri, StringComparison.OrdinalIgnoreCase))
+            {
+                //something we already uploaded
+                return new CloudBlockBlob(new Uri(imageurl)); 
+            }
+
+            MD5 md5Hasher = MD5.Create();
             var hash = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(imageurl));
             var hashname = System.BitConverter.ToString(hash).Replace("-", "");
             return images.GetBlockBlobReference(hashname);

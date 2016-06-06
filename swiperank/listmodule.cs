@@ -84,6 +84,30 @@
                 return saved;
             };
 
+            Post["/fromquery", runAsync: true] = async (param, token) =>
+            {
+                
+                var etasks = Request.Files.Select(async file =>
+                {
+                    var images = Client().GetContainerReference("images");
+                    CloudBlockBlob blob = images.GetBlockBlobReference(Guid.NewGuid().ToString());
+                    await blob.UploadFromStreamAsync(file.Value);
+                    return new Entry {
+                        name = file.Name,
+                        img = blob.Uri.AbsoluteUri,
+                        cachedImg = blob.Uri.AbsoluteUri
+                    };
+                });
+                string listName = Request.Form.name;
+                var entries = await Task.WhenAll(etasks);
+                var saved = await Save(entries, listName);
+                if(saved == HttpStatusCode.Created)
+                {
+                    return Response.AsRedirect("/rank?list=" + System.Web.HttpUtility.UrlEncode(listName));
+                }
+                return saved;
+
+            };
 
 
             Get["/{list*}", runAsync: true] = async (param, token) =>

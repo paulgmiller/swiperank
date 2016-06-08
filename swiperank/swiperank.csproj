@@ -116,6 +116,7 @@
     <Content Include="Views\aggregateranking.sshtml" />
     <Content Include="Views\createlist.sshtml" />
     <Content Include="Views\createlistfromquery.sshtml" />
+    <Content Include="Views\createlistfromfiles.sshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

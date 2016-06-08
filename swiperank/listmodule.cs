@@ -84,7 +84,7 @@
                 return saved;
             };
 
-            Post["/fromquery", runAsync: true] = async (param, token) =>
+            Post["/fromfiles", runAsync: true] = async (param, token) =>
             {
                 
                 var etasks = Request.Files.Select(async file =>

@@ -7,11 +7,14 @@ var ppick = new String(pick).replace("_", " ");
 $("#listname").text(ppick);
 
 var data = JSON.parse(document.getElementById('listdata').innerHTML);
-//var im = new Image();
-//im.src = 'http://URL_OF_IMAGE';
 
 var max = query["max"] || Math.min(32, data.length);
-var imgsourcelist = shuffle(data).slice(0,max);
+var imgsourcelist = shuffle(data).slice(0, max);
+//precache the images
+for (index = 0; index < imgsourcelist.length; ++index) {
+    var im = new Image();
+    im.src = imgsourcelist[index].cachedImg;
+}
 
 var ranker = {
     ranking: [imgsourcelist.pop()],

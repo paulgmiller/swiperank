@@ -1,9 +1,10 @@
 ##swiperank
-http://swiperank.com
+https://swiperank.com
 Rank All the things!
 Online ranking using side by comparisons and swiping.
 
 ##Todo
+* Pre fetch images
 * Hardcode hight cap or raking page? Vertical align, Resize Images? http://imageprocessor.org/
 * pick images on second part of create list. Carosel from bootstrap
 * better share buttons http://blog.himpfen.com/social-sharing-buttons-bootstrap-font-awesome/

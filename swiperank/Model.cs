@@ -11,6 +11,14 @@
         public string PrettyListName { get { return ListName.Replace("_", " "); } }
     }
 
+    //used to start ranking
+    public class RankingEmbryo 
+    {
+        public string ListName;
+        public string Json;
+        public string PrettyListName { get { return ListName.Replace("_", " "); } }
+    }
+
     public class Entry
     {
         public string name;

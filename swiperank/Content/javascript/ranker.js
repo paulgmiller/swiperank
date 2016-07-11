@@ -6,10 +6,9 @@ var pick = query["list"] || "no list specified";
 var ppick = new String(pick).replace("_", " ");
 $("#listname").text(ppick);
 
-$.getJSON( "/list/" + pick).fail(function(err) {
-    alert( "couldn't load " + pick );
- }
-).done(function( data ) {
+var data = JSON.parse(document.getElementById('listdata').innerHTML);
+//var im = new Image();
+//im.src = 'http://URL_OF_IMAGE';
 
 var max = query["max"] || Math.min(32, data.length);
 var imgsourcelist = shuffle(data).slice(0,max);
@@ -135,7 +134,7 @@ $("#done").click(function () {
     finish();
 });
 
-})});
+});
 
 //+ Jonas Raoni Soares Silva
 //@ http://jsfromhell.com/array/shuffle [v1.0]

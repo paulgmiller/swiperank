@@ -27,11 +27,18 @@
                 return Response.AsRedirect("/rank?list=" + listing.ElementAt(index).Name);
             };
 
-            Get["/rank"] = parameters =>
+            Get["/rank", runAsync: true] = async (param, tokens) =>
             {
-                if (string.IsNullOrEmpty(this.Request.Query["list"]))
+                var listname = this.Request.Query["list"];
+                if (string.IsNullOrEmpty(listname))
                     return Response.AsRedirect("/random");
-                var rankembryo = new Ranking { ListName = this.Request.Query["list"]};
+                var listjson = await ListModule.GetList(listname);
+                var rankembryo = new RankingEmbryo
+                {
+                    ListName = listname,
+                    Json = listjson
+                };
+               
                 //debating whether to just embed the list in the page rather than making an ajax call
                 return View["rank", rankembryo];
             };

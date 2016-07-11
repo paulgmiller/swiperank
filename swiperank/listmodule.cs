@@ -110,13 +110,7 @@
             };
 
 
-            Get["/{list*}", runAsync: true] = async (param, token) =>
-            {
-                CloudBlockBlob blob = Lists().GetBlockBlobReference(param.list);
-                if (!await blob.ExistsAsync())
-                    return HttpStatusCode.NotFound;
-                return await blob.DownloadTextAsync();
-            };
+            Get["/{list*}", runAsync: true] = async (param, token) => await GetList(param.list);
 
             Delete["/{list*}", runAsync: true] = async (param, token) =>
             {
@@ -139,6 +133,14 @@
 
                 return HttpStatusCode.OK;
             };
+        }
+
+        public static async Task<string> GetList(string name)
+        {
+            CloudBlockBlob blob = Lists().GetBlockBlobReference(name);
+            if (!await blob.ExistsAsync())
+                throw new Exception("no list of " + name);
+            return await blob.DownloadTextAsync();
         }
 
         const string imgsearchurl = "https://api.datamarket.azure.com/Bing/Search/Image?Query=%27{0}%27&$format=json&Adult=%27{1}%27";
@@ -288,7 +290,7 @@
             return Client().GetContainerReference("rankings");
         }
 
-        private CloudBlobContainer Lists()
+        private static CloudBlobContainer Lists()
         {
             return Client().GetContainerReference("lists");
         }

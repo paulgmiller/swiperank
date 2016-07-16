@@ -2,7 +2,7 @@
 https://swiperank.com
 Rank Anything on your mobile or pc. 
 Build your ranking using side by comparisons and swiping (or arrow keys on pc).
-See aggregate rankings of other users. 
+See aggregate rankings of other users.  Feel free to contribute or donate bitcoin to 34XHn8DfKYWWEXLJ5nkLKKLgEHk94WsweM
 
 ##Todo
 * pick images on second part of create list. Carosel from bootstrap

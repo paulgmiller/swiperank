@@ -1,7 +1,8 @@
 ##swiperank
 https://swiperank.com
-Rank All the things!
-Online ranking using side by comparisons and swiping.
+Rank Anything on your mobile or pc. 
+Build your ranking using side by comparisons and swiping (or arrow keys on pc).
+See aggregate rankings of other users. 
 
 ##Todo
 * pick images on second part of create list. Carosel from bootstrap

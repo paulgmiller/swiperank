@@ -114,8 +114,6 @@
             Get["/createlistfromquery"] = _ => View["createlistfromquery"];
             Get["/createlistfromfiles"] = _ => View["createlistfromfiles"];
             Get["/google8c897581c514bf87.html"] = _ => "google-site-verification: google8c897581c514bf87.html";
-
-
         }
 
         private IEnumerable<string> SortLists(IEnumerable<CloudBlockBlob> blobs)

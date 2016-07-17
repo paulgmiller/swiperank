@@ -1,6 +1,7 @@
 ﻿namespace swiperank
 {
     using Nancy;
+    using Nancy.Elmah;
 
     public class Bootstrapper : DefaultNancyBootstrapper
     {
@@ -11,5 +12,12 @@
         {
             StaticConfiguration.DisableErrorTraces = false;
         }
+
+        protected override void ApplicationStartup(Nancy.TinyIoc.TinyIoCContainer container, Nancy.Bootstrapper.IPipelines pipelines)
+        {
+            base.ApplicationStartup(container, pipelines);
+            Elmahlogging.Enable(pipelines, "elmah");
+        }
+
     }
 }

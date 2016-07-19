@@ -11,6 +11,7 @@ See aggregate rankings of other users.  Feel free to contribute or donate bitcoi
   * pick images on second part of create list. Carosel from bootstrap or allow upload
   * batch file upload page
   * use facebook albums
+* google sitemap and site search. 
 * list descriptions/links. 
 * Hardcode hieght cap or raking page? Vertical align, Resize Images? http://imageprocessor.org/
 * better share buttons http://blog.himpfen.com/social-sharing-buttons-bootstrap-font-awesome/

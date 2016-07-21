@@ -12,8 +12,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Text;
-    using System.Net.Http;
-    using System.IO;
+    using System.Web;
 
     public class IndexModule : NancyModule
     {
@@ -114,7 +113,19 @@
             Get["/createlistfromquery"] = _ => View["createlistfromquery"];
             Get["/createlistfromfiles"] = _ => View["createlistfromfiles"];
             Get["/google8c897581c514bf87.html"] = _ => "google-site-verification: google8c897581c514bf87.html";
-
+            Get["/sitemap.txt", runAsync: true] = async (param, tokens) =>
+            {
+                IEnumerable<CloudBlockBlob> lists = await GetLists();
+                StringBuilder sitemap = new StringBuilder();
+                var scheme =  this.Request.Url.Scheme;
+                var host = this.Request.Url.HostName;
+                foreach (var list in lists)
+                {
+                    var name = HttpUtility.UrlEncode(list.Name);
+                    sitemap.AppendLine($"{scheme}://{host}/aggregatranking/{name}");
+                }
+                return sitemap.ToString();
+            };
 
         }
 

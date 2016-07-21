@@ -78,7 +78,7 @@
                 return View["aggregateranking", aggregateranking];
             };
 
-            /*Get["/updatemetadata", runAsync: true] = async (param, token) =>
+            Get["/updatemetadata", runAsync: true] = async (param, token) =>
             {
                 var lists = await GetLists();
                 var tasks = lists.Select(async list =>
@@ -88,7 +88,7 @@
                 });
                 await Task.WhenAll(tasks);
                 return HttpStatusCode.OK;
-            };*/
+            };
 
             Get["/ranking/{list*}", runAsync: true] = async (param, token) =>
             {
@@ -122,7 +122,7 @@
                 foreach (var list in lists)
                 {
                     var name = HttpUtility.UrlEncode(list.Name);
-                    sitemap.AppendLine($"{scheme}://{host}/aggregatranking/{name}");
+                    sitemap.AppendLine($"{scheme}://{host}/aggregateranking/{name}");
                 }
                 return sitemap.ToString();
             };

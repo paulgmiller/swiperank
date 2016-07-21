@@ -121,7 +121,7 @@
                 var host = this.Request.Url.HostName;
                 foreach (var list in lists)
                 {
-                    var name = HttpUtility.UrlEncode(list.Name);
+                    var name = HttpUtility.UrlPathEncode(list.Name);
                     sitemap.AppendLine($"{scheme}://{host}/aggregateranking/{name}");
                 }
                 return sitemap.ToString();

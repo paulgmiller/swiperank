@@ -10,11 +10,6 @@ var data = JSON.parse(document.getElementById('listdata').innerHTML);
 
 var max = query["max"] || Math.min(32, data.length);
 var imgsourcelist = shuffle(data).slice(0, max);
-//precache the images
-for (index = 0; index < imgsourcelist.length; ++index) {
-    var im = new Image();
-    im.src = imgsourcelist[index].cachedImg;
-}
 
 var ranker = {
     ranking: [imgsourcelist.pop()],
@@ -136,6 +131,12 @@ $("#all").on("swiperight", rightwins);
 $("#done").click(function () {
     finish();
 });
+
+//precache the images now that we've loaded first two.
+for (index = 2; index < imgsourcelist.length; ++index) {
+    var im = new Image();
+    im.src = imgsourcelist[index].cachedImg;
+}
 
 });
 

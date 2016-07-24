@@ -13,6 +13,24 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 	<script src="/content/javascript/googleanalytics.js"></script>
+	<style>
+	  .gsc-search-button
+    {
+        background-color: #1a4195;
+        border-radius: 5px;
+
+    }
+
+    input.gsc-search-button, input.gsc-search-button:hover, input.gsc-search-button:focus {
+        background-color: #1a4195 !important;
+        background-image: url("http://www.google.com/uds/css/v2/search_box_icon.png") !important;
+        background-position: 50% 50%;
+        background-repeat: no-repeat;
+        height: 16px !important;
+        border-color: #1a4195 !important;
+        filter: none;
+    }
+	</style>
 	<nav class="navbar navbar-default">
         <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -38,7 +56,20 @@
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
     </nav>
-    
+    <div class="gsearch">
+    <script>
+      (function() {
+        var cx = '017844157667353347108:wi8hnyb2hvk';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+      })();
+    </script>
+    <gcse:search></gcse:search>
+    </div>
     <!-- Move to http://getbootstrap.com/components/#media-list when we have thumbnails --> 
     <div class="list-group">
        @Each

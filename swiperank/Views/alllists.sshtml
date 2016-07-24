@@ -38,7 +38,20 @@
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
     </nav>
-    
+    <div class="gsearch">
+    <script>
+      (function() {
+        var cx = '017844157667353347108:wi8hnyb2hvk';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+      })();
+    </script>
+    <gcse:search></gcse:search>
+    </div>
     <!-- Move to http://getbootstrap.com/components/#media-list when we have thumbnails --> 
     <div class="list-group">
        @Each

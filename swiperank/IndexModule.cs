@@ -141,11 +141,12 @@
                         new ListStub {
                             name = b.Name,
                             rankings = await RankCount(b),
-                            //thumbnail = await Thumbnail(b)
+                            thumbnail = await Thumbnail(b)
                         });
             return await Task.WhenAll(stubs);
         }
 
+       
         private async Task<string> Thumbnail(CloudBlockBlob b)
         {
             var rand = new Random();

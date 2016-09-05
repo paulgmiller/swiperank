@@ -71,14 +71,18 @@
     <gcse:search></gcse:search>
     </div>
     <!-- Move to http://getbootstrap.com/components/#media-list when we have thumbnails --> 
-    <div class="list-group">
+    <div class="media-list">
        @Each
-		<a href="/rank?list=@Current.name">
-		<li class="list-group-item">
-        <span class="badge">@Current.rankings</span>
-		@Current.name
+		<li class="media">
+			<a href="/rank?list=@Current.name">
+				<div class="media-left media-middle"><img class="media-object" width="64" src="@Current.thumbnail" /></div>
+				<div class="media-body">
+					<h4>
+					@Current.name <span class="badge">@Current.rankings</span>
+					</h4>
+				</div>
+			</a>
 		</li>
-		</a>
 		@EndEach
     </div>
 

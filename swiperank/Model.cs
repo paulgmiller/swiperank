@@ -26,6 +26,13 @@
         public string cachedImg;
     }
 
+    public class ListStub
+    {
+        public string name;
+        public int rankings;
+        public string thumbnail;
+    }
+
     public class EntryWithScore : Entry
     {
         public int score;

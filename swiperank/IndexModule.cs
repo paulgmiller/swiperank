@@ -42,12 +42,13 @@
                 return View["rank", rankembryo];
             };
 
-            Get["/", runAsync: true] = Get["/alllists", runAsync: true] = async (param, token) =>
+            Get["/", runAsync: true] = 
+            Get["/alllists", runAsync: true] = async (param, token) =>
             {
                 var collection = this.Request.Query["collection"] ?? ""; //if nothing empty string is the root
                 IEnumerable<CloudBlockBlob> lists = await GetLists(collection);
                 //lists.Select(l => new { nam = l.Name, rankings = RankCount(l) }) (show rank counts?} 
-                return View["alllists", SortLists(lists)];
+                return View["alllists", await SortLists(lists)];
             };
       
             Post["/ranking/{list*}", runAsync: true] = async (param, token) =>
@@ -129,18 +130,27 @@
 
         }
 
-        private IEnumerable<string> SortLists(IEnumerable<CloudBlockBlob> blobs)
+        //so ideally we want to bias by rankcount and freshness (last ranking and creation?)
+        private async Task<IEnumerable<ListStub>> SortLists(IEnumerable<CloudBlockBlob> blobs)
         {
-            return blobs.OrderByDescending(b => RankCount(b).Result)
-                        .ThenBy(b => b.Name, StringComparer.OrdinalIgnoreCase)
-                        .Where( (CloudBlockBlob b) =>
-                        {
-                            return RankCount(b).Result > 0;
-                            //have to fetch attributes?
-                            //var age = DateTime.UtcNow - b.Properties.LastModified.Value;
-                            //return age < TimeSpan.FromDays(7);
-                        })
-                        .Select(b => b.Name);
+            var rand = new Random();
+            var top = blobs.OrderBy(b => rand.Next())
+                        .Where(b => RankCount(b).Result > 1)
+                        .Take(10);
+            var stubs = top.Select(async b =>
+                        new ListStub {
+                            name = b.Name,
+                            rankings = await RankCount(b),
+                            //thumbnail = await Thumbnail(b)
+                        });
+            return await Task.WhenAll(stubs);
+        }
+
+        private async Task<string> Thumbnail(CloudBlockBlob b)
+        {
+            var rand = new Random();
+            var list = JsonConvert.DeserializeObject<IEnumerable<Entry>>(await b.DownloadTextAsync());
+            return list.OrderBy(e => rand.Next()).First().cachedImg;
         }
 
 

@@ -8,6 +8,7 @@
     {
         public string ListName;
         public string Hash;
+        public int Multiplier = 1;
         public string PrettyListName { get { return ListName.Replace("_", " "); } }
     }
 
@@ -79,10 +80,10 @@
                 return ranked.Values.OrderByDescending(e => e.score);
             }
         }
-        public void Add(IReadOnlyCollection<Entry> ranking)
+        public void Add(IReadOnlyCollection<Entry> ranking, int multiplier = 1)
         {
             ++TotalRankings;
-            var score = ranking.Count;
+            var score = ranking.Count * multiplier;
             foreach (var rank in ranking)
             {
                 if (rank == null)

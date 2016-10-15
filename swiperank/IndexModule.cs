@@ -162,9 +162,12 @@
             {
                 var json = await r.DownloadTextAsync();
                 //need to save and pass back cap/max and seed.
-                return JsonConvert.DeserializeObject<Ranking>(json);
+                var ranking = JsonConvert.DeserializeObject<Ranking>(json);
+                ranking.Multiplier  = await RankCount(r, "1");
+                return ranking;
             }));
             var agg = new AggregateRanking() { ListName = list };
+            
             foreach (var r in rankings)
             {
                 if (r == null) continue;
@@ -173,17 +176,17 @@
             return agg;
         }
 
-        private async Task<int> RankCount(CloudBlockBlob b)
+        private async Task<int> RankCount(CloudBlockBlob b, string defaultcount = "0")
         {
             if (b.Metadata == null)
                 await b.FetchAttributesAsync();
             try
             {
-                return int.Parse(b.Metadata["rankcount"] ?? "0");
+                return int.Parse(b.Metadata["rankcount"] ?? defaultcount);
             }
             catch (KeyNotFoundException)
             {
-                return 0;
+                return defaultcount;
             }
 
         }
@@ -223,6 +226,13 @@
         {
             return Client().GetContainerReference("lists");
         }
-        
+
+        private async Task<CloudBlobContainer> Log()
+        {
+            var log Client().GetContainerReference("Log_");
+            await log.CreateIfNotExistsAsync(;
+            return log
+        }
+
     }
 }

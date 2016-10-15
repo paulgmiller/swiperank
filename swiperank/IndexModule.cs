@@ -56,10 +56,17 @@
                 MD5 md5Hasher = MD5.Create();
                 var hash = md5Hasher.ComputeHash(this.Request.Body);
                 var relativeUrl = param.list + "/" + BitConverter.ToString(hash).ToString().Replace("-", "");
-                var blob = Rankings().GetBlockBlobReference(relativeUrl);
-                this.Request.Body.Seek(0, System.IO.SeekOrigin.Begin);
-                await blob.UploadFromStreamAsync(this.Request.Body);
-                
+                var ranking = Rankings().GetBlockBlobReference(relativeUrl);
+                if (await ranking.ExistsAsync())
+                {
+                    int rankingcount = await RankCount(ranking);
+                    await SetRankCount(ranking, ++rankingcount);
+                }
+                else
+                {
+                    this.Request.Body.Seek(0, System.IO.SeekOrigin.Begin);
+                    await ranking.UploadFromStreamAsync(this.Request.Body);
+                }
                 string name = param.list;
                 CloudBlockBlob list = Lists().GetBlockBlobReference(name);
                 int r = await RankCount(list);

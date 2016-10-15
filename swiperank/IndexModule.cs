@@ -60,10 +60,10 @@
                 this.Request.Body.Seek(0, System.IO.SeekOrigin.Begin);
                 await blob.UploadFromStreamAsync(this.Request.Body);
                 
-                /*    string name = param.list;
-                    CloudBlockBlob list = Lists().GetBlockBlobReference(name);
-                    int r = await RankCount(list);
-                    await SetRankCount(list, ++r);*/
+                string name = param.list;
+                CloudBlockBlob list = Lists().GetBlockBlobReference(name);
+                int r = await RankCount(list);
+                await SetRankCount(list, ++r);
 
                 Loggr.Events.Create()
                     .Text("Ranking created: {0}", "ranking/" + relativeUrl)

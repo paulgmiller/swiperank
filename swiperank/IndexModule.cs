@@ -1,18 +1,18 @@
 ﻿namespace swiperank
 {
     using Nancy;
-    using Nancy.ModelBinding;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
     using System.Security.Cryptography;
     using System.Collections.Generic;
+    using System.Configuration;
     using Newtonsoft.Json;
     using System;
-    using System.Configuration;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Text;
     using System.Web;
+    using Loggr;
 
     public class IndexModule : NancyModule
     {
@@ -59,17 +59,17 @@
                 var blob = Rankings().GetBlockBlobReference(relativeUrl);
                 this.Request.Body.Seek(0, System.IO.SeekOrigin.Begin);
                 await blob.UploadFromStreamAsync(this.Request.Body);
-                try
-                {
+                
                     string name = param.list;
                     CloudBlockBlob list = Lists().GetBlockBlobReference(name);
                     int r = await RankCount(list);
                     await SetRankCount(list, ++r);
-                }
-                catch (Exception e)
-                {
-                    return e.ToString();
-                }
+
+                Loggr.Events.Create()
+                    .Text("Ranking created: {0}", "ranking/" + relativeUrl)
+                    .Link("ranking / " + relativeUrl)
+                    .Source(this.Context.CurrentUser.UserName)
+                    .Post();
                 return "ranking/" + relativeUrl;
             };
 
@@ -98,7 +98,7 @@
                 CloudBlockBlob blob = Rankings().GetBlockBlobReference(cobminedlistandhash);
                 if (!await blob.ExistsAsync())
                     return HttpStatusCode.NotFound;
-
+            
                 var json = await blob.DownloadTextAsync();
                 //need to save and pass back cap/max and seed.
                 var ranking = JsonConvert.DeserializeObject<Ranking>(json);

@@ -59,7 +59,7 @@
                 var ranking = Rankings().GetBlockBlobReference(relativeUrl);
                 if (await ranking.ExistsAsync())
                 {
-                    int rankingcount = await RankCount(ranking);
+                    int rankingcount = await RankCount(ranking, "1");
                     await SetRankCount(ranking, ++rankingcount);
                 }
                 else
@@ -193,7 +193,7 @@
             }
             catch (KeyNotFoundException)
             {
-                return defaultcount;
+                return int.Parse(defaultcount);
             }
 
         }
@@ -233,13 +233,6 @@
         {
             return Client().GetContainerReference("lists");
         }
-
-        private async Task<CloudBlobContainer> Log()
-        {
-            var log Client().GetContainerReference("Log_");
-            await log.CreateIfNotExistsAsync(;
-            return log
-        }
-
+        
     }
 }

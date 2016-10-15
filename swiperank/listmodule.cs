@@ -202,6 +202,11 @@
             list = await CacheImages(list);
             await blob.UploadTextAsync(JsonConvert.SerializeObject(list));
             await SetRankCount(blob, 0);
+            Loggr.Events.Create()
+               .Text("List created: {0}", name)
+               .Link("list/" + name)
+               .Source(this.Context.Request.UserHostAddress ?? "unknown")
+               .Post();
             return HttpStatusCode.Created;
         }
         private async Task RenameAll(string from, string to)

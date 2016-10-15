@@ -75,7 +75,7 @@
                 Loggr.Events.Create()
                     .Text("Ranking created: {0}", "ranking/" + relativeUrl)
                     .Link("ranking /" + relativeUrl)
-                    //.Source(this.Context.CurrentUser.UserName)
+                    .Source(this.Context.Request.UserHostAddress ?? "unknown")
                     .Post();
                 return "ranking/" + relativeUrl;
             };

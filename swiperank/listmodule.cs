@@ -20,7 +20,7 @@
         public ListModule() : base("/list")
         {
          
-            Get["/dedupe/{list*}", runAsync: true] = async (param, token) =>
+            Get("/dedupe/{list*}",async (param, token) =>
             {
                 CloudBlockBlob blob = Lists().GetBlockBlobReference(param.list);
                 var list = JsonConvert.DeserializeObject<IEnumerable<Entry>>(await blob.DownloadTextAsync());
@@ -29,9 +29,9 @@
                 await blob.UploadTextAsync(JsonConvert.SerializeObject(newlist));
                 return JsonConvert.SerializeObject(new { oldcount = list.Count(), newcount = newlist.Count() });
 
-            };
+            });
 
-            Post["/{list*}", runAsync: true] = async (param, token) =>
+            Post("/{list*}",async (param, token) =>
             {
                 using (var sr = new StreamReader(this.Request.Body))
                 using (var jsonTextReader = new JsonTextReader(sr))
@@ -40,10 +40,10 @@
                     var list = serializer.Deserialize<IEnumerable<Entry>>(jsonTextReader);
                     return await Save(list, param.list);
                 }
-            };
+            });
 
             
-            Post["/", runAsync: true] = async (param, token) =>
+            Post("/",async (param, token) =>
             {
                 var input = this.Bind<NewList>();
 
@@ -65,9 +65,9 @@
                 }
                 return saved;
 
-            };
+            });
 
-            Post["/fromquery", runAsync: true] = async (param, token) =>
+            Post("/fromquery",async (param, token) =>
             {
                 var input = this.Bind<NewList>();
                 
@@ -82,9 +82,9 @@
                     return Response.AsRedirect("/rank?list=" + System.Web.HttpUtility.UrlEncode(input.name));
                 }
                 return saved;
-            };
+            });
 
-            Post["/fromfiles", runAsync: true] = async (param, token) =>
+            Post("/fromfiles",async (param, token) =>
             {
                 
                 var etasks = Request.Files.Select(async file =>
@@ -107,12 +107,12 @@
                 }
                 return saved;
 
-            };
+            });
 
 
-            Get["/{list*}", runAsync: true] = async (param, token) => await GetList(param.list);
+            Get("/{list*}",async (param, token) => await GetList(param.list));
 
-            Delete["/{list*}", runAsync: true] = async (param, token) =>
+            Delete("/{list*}",async (param, token) =>
             {
                 if (!ConfigurationManager.AppSettings["deletepassword"].Equals(this.Request.Query["password"]))
                     return HttpStatusCode.Unauthorized;
@@ -121,10 +121,10 @@
                     return HttpStatusCode.NotFound;
                 await blob.DeleteAsync();
                 return HttpStatusCode.OK;
-            };
+            });
 
             //better if we take it an reject or return hash url
-            Get["/{list*}/rename", runAsync: true] = async (param, token) =>
+            Get("/{list*}/rename",async (param, token) =>
             {
                 string to = this.Request.Query["to"];
                 if (string.IsNullOrEmpty(to))
@@ -132,7 +132,7 @@
                 await RenameAll(param.list, to);
 
                 return HttpStatusCode.OK;
-            };
+            });
         }
 
         public static async Task<string> GetList(string name)

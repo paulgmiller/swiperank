@@ -13,20 +13,21 @@
     using System.Text;
     using System.Web;
     using Loggr;
+    using ConfigurationManager = System.Configuration.ConfigurationManager;
 
     public class IndexModule : NancyModule
     {
         public IndexModule()
         {
-            Get["/random", runAsync: true] = async (param, token) =>
+            Get("/random", async (param, token) =>
             {
                 var r = new Random();
                 var listing = await GetLists();
                 var index = r.Next(0, listing.Count());
                 return Response.AsRedirect("/rank?list=" + listing.ElementAt(index).Name);
-            };
+            });
 
-            Get["/rank", runAsync: true] = async (param, tokens) =>
+            Get("/rank", async (param, tokens) =>
             {
                 var listname = this.Request.Query["list"];
                 if (string.IsNullOrEmpty(listname))
@@ -40,18 +41,18 @@
                
                 //debating whether to just embed the list in the page rather than making an ajax call
                 return View["rank", rankembryo];
-            };
+            });
 
-            Get["/", runAsync: true] = 
-            Get["/alllists", runAsync: true] = async (param, token) =>
+           //Get("/",
+           Get("/alllists",async (param, token) =>
             {
                 var collection = this.Request.Query["collection"] ?? ""; //if nothing empty string is the root
                 IEnumerable<CloudBlockBlob> lists = await GetLists(collection);
                 //lists.Select(l => new { nam = l.Name, rankings = RankCount(l) }) (show rank counts?} 
                 return View["alllists", await SortLists(lists)];
-            };
+            });
       
-            Post["/ranking/{list*}", runAsync: true] = async (param, token) =>
+            Post("/ranking/{list*}",async (param, token) =>
             {
                 MD5 md5Hasher = MD5.Create();
                 var hash = md5Hasher.ComputeHash(this.Request.Body);
@@ -78,15 +79,14 @@
                     .Source(this.Context.Request.UserHostAddress ?? "unknown")
                     .Post();
                 return "ranking/" + relativeUrl;
-            };
+            });
 
-            Get["/aggregateranking/{list*}", runAsync:true] = async (param, token) =>
-            {
+           Get("/aggregateranking/{list*}",  async (param, token) => {
                 var aggregateranking = await Aggregate(param.list);
                 return View["aggregateranking", aggregateranking];
-            };
+            });
 
-            Get["/updatemetadata", runAsync: true] = async (param, token) =>
+           Get("/updatemetadata",async (param, token) =>
             {
                 var lists = await GetLists();
                 var tasks = lists.Select(async list =>
@@ -96,10 +96,9 @@
                 });
                 await Task.WhenAll(tasks);
                 return HttpStatusCode.OK;
-            };
+            });
 
-            Get["/ranking/{list*}", runAsync: true] = async (param, token) =>
-            {
+           Get("/ranking/{list*}",async (param, token) =>  {
                 //greedy doesn't let us pull out the hash so do it manually
                 string cobminedlistandhash = param.list;
                 CloudBlockBlob blob = Rankings().GetBlockBlobReference(cobminedlistandhash);
@@ -114,14 +113,14 @@
                 ranking.ListName = cobminedlistandhash.Substring(0, sep);
                 ranking.Hash = cobminedlistandhash.Substring(sep+1); 
                 return View["ranking", ranking];
-            };
+            });
 
             
-            Get["/createlist"] = _ => View["createlist"];
-            Get["/createlistfromquery"] = _ => View["createlistfromquery"];
-            Get["/createlistfromfiles"] = _ => View["createlistfromfiles"];
-            Get["/google8c897581c514bf87.html"] = _ => "google-site-verification: google8c897581c514bf87.html";
-            Get["/sitemap.txt", runAsync: true] = async (param, tokens) =>
+           Get("/createlist",  _ => View["createlist"]);
+           Get("/createlistfromquery",  _ => View["createlistfromquery"]);
+           Get("/createlistfromfiles", _ => View["createlistfromfiles"]);
+           Get("/google8c897581c514bf87.html", _ => "google-site-verification: google8c897581c514bf87.html");
+           Get("/sitemap.txt",async (param, tokens) =>
             {
                 IEnumerable<CloudBlockBlob> lists = await GetLists();
                 StringBuilder sitemap = new StringBuilder();
@@ -133,7 +132,7 @@
                     sitemap.AppendLine($"{scheme}://{host}/aggregateranking/{name}");
                 }
                 return sitemap.ToString();
-            };
+            });
 
         }
 

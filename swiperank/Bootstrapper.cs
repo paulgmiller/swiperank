@@ -9,7 +9,8 @@
         // For more information https://github.com/NancyFx/Nancy/wiki/Bootstrapper
         public Bootstrapper()
         {
-            StaticConfiguration.DisableErrorTraces = false;
+            //doesn't exist anymore
+            //StaticConfiguration.DisableErrorTraces = false;
         }
     }
 }

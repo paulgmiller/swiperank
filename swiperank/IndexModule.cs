@@ -12,7 +12,6 @@
     using System.Threading.Tasks;
     using System.Text;
     using System.Web;
-    using Loggr;
     using ConfigurationManager = System.Configuration.ConfigurationManager;
 
     public class IndexModule : NancyModule
@@ -73,11 +72,11 @@
                 int r = await RankCount(list);
                 await SetRankCount(list, ++r);
 
-                Loggr.Events.Create()
+                /*Loggr.Events.Create()
                     .Text("Ranking created: {0}", "ranking/" + relativeUrl)
                     .Link("ranking /" + relativeUrl)
                     .Source(this.Context.Request.UserHostAddress ?? "unknown")
-                    .Post();
+                    .Post();*/
                 return "ranking/" + relativeUrl;
             });
 
@@ -218,8 +217,8 @@
        
         private CloudBlobClient Client()
         {
-            var account = CloudStorageAccount.Parse(
-                ConfigurationManager.ConnectionStrings["swiperankings"].ConnectionString);
+            var cstr =  Environment.GetEnvironmentVariable("RANKINGS_CONNECTION_STRING") ?? "UseDevelopmentStorage=true;";
+            var account = CloudStorageAccount.Parse(cstr);
             return account.CreateCloudBlobClient();
         }
         

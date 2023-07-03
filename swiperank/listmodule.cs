@@ -114,7 +114,8 @@
 
             Delete("/{list*}",async (param, token) =>
             {
-                if (!ConfigurationManager.AppSettings["deletepassword"].Equals(this.Request.Query["password"]))
+                var password = Environment.GetEnvironmentVariable("deletepassword") ?? "prettyplease";
+                if (!password.Equals(this.Request.Query["password"]))
                     return HttpStatusCode.Unauthorized;
                 CloudBlockBlob blob = Lists().GetBlockBlobReference(param.list);
                 if (!await blob.ExistsAsync())
@@ -147,7 +148,7 @@
 
         private async Task<IEnumerable<Entry>> GetValidResults(string query, string safesearch)
         {
-            string key = ConfigurationManager.AppSettings["bingimagekey"];
+            string key = Environment.GetEnvironmentVariable("bingimagekey") ?? "NOTVALID";
             var http = new HttpClient();
             var base64 = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(key));
             http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", base64);
@@ -202,11 +203,11 @@
             list = await CacheImages(list);
             await blob.UploadTextAsync(JsonConvert.SerializeObject(list));
             await SetRankCount(blob, 0);
-            Loggr.Events.Create()
+            /*Loggr.Events.Create()
                .Text("List created: {0}", name)
                .Link("list/" + name)
                .Source(this.Context.Request.UserHostAddress ?? "unknown")
-               .Post();
+               .Post();*/
             return HttpStatusCode.Created;
         }
         private async Task RenameAll(string from, string to)
@@ -285,10 +286,11 @@
        
         private static CloudBlobClient Client()
         {
-            var account = CloudStorageAccount.Parse(
-                ConfigurationManager.ConnectionStrings["swiperankings"].ConnectionString);
+            var cstr =  Environment.GetEnvironmentVariable("RANKINGS_CONNECTION_STRING") ?? "UseDevelopmentStorage=true;";
+            var account = CloudStorageAccount.Parse(cstr);
             return account.CreateCloudBlobClient();
         }
+        
         
         private CloudBlobContainer Rankings()
         {
